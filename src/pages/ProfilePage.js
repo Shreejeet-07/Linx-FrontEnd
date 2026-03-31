@@ -19,13 +19,14 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
   const [avatar, setAvatar] = useState(user.avatar || '🌟');
   const [username, setUsername] = useState(user.username || '');
   const [email, setEmail] = useState(user.email || '');
+  const [profileTheme, setProfileTheme] = useState(user.profileTheme || 'default');
   const [dragOver, setDragOver] = useState(false);
   const [saved, setSaved] = useState(false);
   const [errors, setErrors] = useState({});
   const [copiedPage, setCopiedPage] = useState(false);
 
   const myPageUrl = `${window.location.origin}/?user=${user.id}`;
-  const currentTheme = PROFILE_THEMES[0];
+  const currentTheme = PROFILE_THEMES.find(t => t.id === profileTheme) || PROFILE_THEMES[0];
 
   function handlePhotoFile(file) {
     if (!file || !file.type.startsWith('image/')) return;
@@ -51,7 +52,7 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
 
     const profileRes = await updateProfile(user.id, { bio, avatar });
     if (profileRes) {
-      setUser({ ...user, bio: profileRes.bio, avatar: profileRes.avatar, username, email });
+      setUser({ ...user, bio: profileRes.bio, avatar: profileRes.avatar, username, email, profileTheme });
     }
 
     setSaved(true);
@@ -129,6 +130,27 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
                       <input type="email" value={email} onChange={e => { setEmail(e.target.value); setErrors(p => ({ ...p, email: '' })); }} placeholder="you@example.com" className={errors.email ? 'error' : ''} />
                     </div>
                     {errors.email && <div className="pp-error">{errors.email}</div>}
+                  </div>
+                </div>
+
+                {/* PROFILE THEME */}
+                <div className="pp-section">
+                  <div className="pp-section-title"><span className="pp-section-icon">🎨</span> Profile Theme</div>
+                  <div className="pp-theme-grid">
+                    {PROFILE_THEMES.map(t => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        className={`pp-theme-swatch${profileTheme === t.id ? ' selected' : ''}`}
+                        style={{ background: t.bg }}
+                        onClick={() => setProfileTheme(t.id)}
+                        title={t.label}
+                      >
+                        <span className="pp-theme-dot" style={{ background: t.accent }} />
+                        <span className="pp-theme-name">{t.label}</span>
+                        {profileTheme === t.id && <span className="pp-theme-check">✓</span>}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
