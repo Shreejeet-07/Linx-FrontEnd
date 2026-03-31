@@ -31,7 +31,9 @@ const FEATURES = [
 ];
 
 export default function Landing({ onAuth, onBrowse, user }) {
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || (() => {
+    try { return JSON.parse(localStorage.getItem('linx_session'))?.role === 'admin'; } catch { return false; }
+  })();
   const [menuOpen, setMenuOpen] = useState(false);
   const [modal, setModal] = useState(null);
   const [activeFeature, setActiveFeature] = useState(null);

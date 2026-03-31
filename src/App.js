@@ -61,7 +61,11 @@ export default function App() {
     onNavigate: handleNavigate,
   };
 
-  let content;
+  // Also show landing with admin context when admin navigates back
+  const [landingUser, setLandingUser] = useState(() => {
+    const saved = localStorage.getItem('linx_session');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   if (!user) {
     // ── Guest routes ──
@@ -92,7 +96,15 @@ export default function App() {
     }
   } else if (user.role === 'admin') {
     // ── Admin routes ──
-    if (page === 'profile' && profileId) {
+    if (page === 'landing') {
+      content = (
+        <Landing
+          onAuth={handleAuth}
+          onBrowse={() => setPage('explore')}
+          user={user}
+        />
+      );
+    } else if (page === 'profile' && profileId) {
       content = (
         <ProfileView
           userId={profileId}
