@@ -1,0 +1,103 @@
+/* ═══════════════════════════════════════════════════════════════
+   CTA — FLUID CSS
+   Organic dark card, liquid input, glow accents
+   ═══════════════════════════════════════════════════════════════ */
+
+.cta-section {
+  background: linear-gradient(160deg, var(--ink) 0%, #1a1a2e 100%);
+  margin: 4rem 3rem;
+  border-radius: var(--radius-xl);
+  padding: 5rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--dur-slow) var(--ease-spring);
+}
+.cta-section:hover { transform: scale(1.005); }
+
+/* Animated star dust */
+.cta-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 65% 15%, rgba(255,255,255,0.06) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,0.05) 0%, transparent 100%);
+  pointer-events: none;
+  animation: breathe 8s ease-in-out infinite;
+}
+
+.cta-section h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1.5px;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+.cta-section p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-input-row {
+  display: flex; gap: 0.6rem;
+  max-width: 460px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 0.4rem;
+  position: relative;
+  z-index: 1;
+  transition: 
+    border-color var(--dur-normal) var(--ease-fluid),
+    box-shadow var(--dur-normal) var(--ease-fluid),
+    background var(--dur-fast) var(--ease-smooth);
+}
+.cta-input-row:focus-within {
+  border-color: rgba(123, 92, 246, 0.4);
+  box-shadow: 0 0 0 4px rgba(123, 92, 246, 0.1), 0 8px 24px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.cta-input-row span {
+  color: rgba(255, 255, 255, 0.4);
+  padding-left: 1rem;
+  display: flex; align-items: center;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.cta-input-row input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.95rem;
+  flex: 1;
+  font-family: 'DM Sans', sans-serif;
+  padding: 0.4rem;
+}
+.cta-input-row input:focus {
+  box-shadow: none;
+  transform: none;
+}
+.cta-input-row input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+.cta-bg-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.12;
+  filter: blur(80px);
+  animation: blobMorph 12s ease-in-out infinite;
+}
+
+@media (max-width: 900px) {
+  .cta-section { margin: 2rem 1.5rem; padding: 3rem 1.5rem; }
+}

@@ -1,0 +1,294 @@
+/* ═══════════════════════════════════════════════════════════════
+   APP NAV — Left sidebar panel
+   ═══════════════════════════════════════════════════════════════ */
+
+.appnav {
+  width: 240px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--ink) 0%, #111118 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 1.8rem 1.2rem 1.4rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: visible;
+  flex-shrink: 0;
+  animation: sidebarSlideIn 0.5s var(--ease-fluid) both;
+  z-index: 50;
+}
+@keyframes sidebarSlideIn {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Brand ── */
+.appnav-brand {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.7rem;
+  letter-spacing: -1.5px;
+  color: #fff;
+  cursor: pointer;
+  padding: 0 0.4rem;
+  margin-bottom: 1.6rem;
+  transition: transform var(--dur-normal) var(--ease-spring);
+  flex-shrink: 0;
+}
+.appnav-brand:hover { transform: scale(1.05); }
+.appnav-brand span { color: var(--accent); }
+
+/* ── User mini-card ── */
+.appnav-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.8rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  margin-bottom: 1.6rem;
+  transition:
+    background var(--dur-fast) var(--ease-smooth),
+    border-color var(--dur-fast) var(--ease-smooth),
+    transform var(--dur-normal) var(--ease-spring);
+}
+.appnav-profile:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.15);
+  transform: translateX(3px);
+}
+
+.appnav-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.15);
+  flex-shrink: 0;
+  transition: transform var(--dur-normal) var(--ease-spring);
+}
+.appnav-profile:hover .appnav-avatar { transform: scale(1.08); }
+.appnav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.appnav-user-info { min-width: 0; }
+.appnav-username {
+  font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.appnav-email {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.38);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Nav links ── */
+.appnav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.appnav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.72rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.45);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  transition:
+    color var(--dur-fast) var(--ease-smooth),
+    transform var(--dur-normal) var(--ease-spring);
+}
+
+/* Fluid sliding bg on hover */
+.appnav-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition:
+    transform var(--dur-normal) var(--ease-fluid),
+    opacity var(--dur-fast) var(--ease-smooth);
+}
+.appnav-item:hover::before { opacity: 1; transform: scaleX(1); }
+.appnav-item:hover {
+  color: #fff;
+  transform: translateX(4px);
+}
+
+.appnav-item.active {
+  background: linear-gradient(135deg, var(--accent), #6d4de8);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(123,92,246,0.4);
+  transform: translateX(0);
+  animation: navItemPop 0.3s var(--ease-bounce);
+}
+.appnav-item.active::before { display: none; }
+.appnav-item.active:hover { transform: none; }
+
+@keyframes navItemPop {
+  from { transform: scale(0.93) translateX(-6px); opacity: 0.6; }
+  to   { transform: scale(1) translateX(0); opacity: 1; }
+}
+
+.appnav-icon { font-size: 1.05rem; flex-shrink: 0; }
+.appnav-label { flex: 1; }
+
+.appnav-badge {
+  background: #EF4444;
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  flex-shrink: 0;
+  animation: badgePop 0.3s var(--ease-bounce) both;
+}
+@keyframes badgePop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+
+/* ── Bottom section ── */
+.appnav-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  margin-top: 1rem;
+  position: relative;
+  overflow: visible;
+}
+
+.appnav-logout {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.35);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  transition:
+    color var(--dur-fast) var(--ease-smooth),
+    background var(--dur-fast) var(--ease-smooth),
+    transform var(--dur-normal) var(--ease-spring);
+}
+.appnav-logout:hover {
+  color: #ff6b6b;
+  background: rgba(239,68,68,0.1);
+  transform: translateX(3px);
+}
+
+/* ── Theme-aware sidebar overrides ── */
+[data-theme="dark"] .appnav {
+  background: linear-gradient(180deg, #0a0a14 0%, #0f0f1a 100%);
+  border-right: 1px solid rgba(42,42,69,0.6);
+}
+[data-theme="dark"] .appnav-item.active {
+  background: linear-gradient(135deg, #8B5CF6, #6d4de8);
+  box-shadow: 0 4px 20px rgba(139,92,246,0.4);
+}
+
+[data-theme="eco"] .appnav {
+  background: linear-gradient(180deg, #071209 0%, #0d1f0f 100%);
+  border-right: 1px solid rgba(30,64,36,0.6);
+}
+[data-theme="eco"] .appnav-brand span { color: #22C55E; }
+[data-theme="eco"] .appnav-item.active {
+  background: linear-gradient(135deg, #22C55E, #16a34a);
+  color: #071209;
+  box-shadow: 0 4px 20px rgba(34,197,94,0.4);
+}
+[data-theme="eco"] .appnav-logout:hover { color: #4ade80; background: rgba(34,197,94,0.1); }
+
+[data-theme="neon"] .appnav {
+  background: linear-gradient(180deg, #03030a 0%, #05050f 100%);
+  border-right: 1px solid rgba(0,255,200,0.1);
+  box-shadow: 4px 0 30px rgba(0,255,200,0.04);
+}
+[data-theme="neon"] .appnav-brand { color: #00FFC8; text-shadow: 0 0 20px rgba(0,255,200,0.5); }
+[data-theme="neon"] .appnav-brand span { color: #FF00AA; text-shadow: 0 0 20px rgba(255,0,170,0.5); }
+[data-theme="neon"] .appnav-profile {
+  background: rgba(0,255,200,0.05);
+  border-color: rgba(0,255,200,0.1);
+}
+[data-theme="neon"] .appnav-profile:hover {
+  background: rgba(0,255,200,0.09);
+  border-color: rgba(0,255,200,0.2);
+}
+[data-theme="neon"] .appnav-item:hover { color: #00FFC8; }
+[data-theme="neon"] .appnav-item.active {
+  background: transparent;
+  color: #00FFC8;
+  border: 1px solid rgba(0,255,200,0.4);
+  box-shadow: 0 0 16px rgba(0,255,200,0.2), inset 0 0 16px rgba(0,255,200,0.04);
+}
+[data-theme="neon"] .appnav-bottom { border-top-color: rgba(0,255,200,0.08); }
+[data-theme="neon"] .appnav-logout:hover { color: #FF00AA; background: rgba(255,0,170,0.08); }
+
+/* ── Responsive: collapse to bottom bar on mobile ── */
+@media (max-width: 768px) {
+  .appnav {
+    width: 100%;
+    min-height: unset;
+    height: auto;
+    position: sticky;
+    top: 0;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    gap: 0.5rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .appnav-brand { margin-bottom: 0; font-size: 1.3rem; flex-shrink: 0; }
+  .appnav-profile { margin-bottom: 0; flex-shrink: 0; padding: 0.4rem 0.6rem; }
+  .appnav-email { display: none; }
+  .appnav-links { flex-direction: row; flex: 1; gap: 0.2rem; }
+  .appnav-item { padding: 0.5rem 0.7rem; font-size: 0.8rem; }
+  .appnav-bottom { flex-direction: row; padding-top: 0; border-top: none; margin-top: 0; flex-shrink: 0; }
+  .appnav-item:hover { transform: none; }
+  .appnav-item.active { animation: none; }
+}

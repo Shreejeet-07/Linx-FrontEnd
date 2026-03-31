@@ -1,0 +1,198 @@
+/* ═══════════════════════════════════════════════════════════════
+   EXPLORE — FLUID CSS
+   Liquid card grid, organic search, premium glass nav
+   ═══════════════════════════════════════════════════════════════ */
+
+.explore-layout { min-height: 100vh; background: var(--paper); overflow-x: hidden; }
+
+.explore-with-sidebar {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  overflow-x: unset;
+}
+.explore-with-sidebar .explore-body { overflow-y: auto; }
+
+@media (max-width: 768px) {
+  .explore-with-sidebar { grid-template-columns: 1fr; }
+}
+
+.explore-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2.5rem;
+  background: rgba(var(--paper-rgb, 245, 242, 236), 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+  animation: navSlideDown 0.5s var(--ease-fluid) both;
+}
+@keyframes navSlideDown {
+  from { opacity: 0; transform: translateY(-100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.explore-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 1.4rem;
+  letter-spacing: -1px;
+  transition: transform var(--dur-normal) var(--ease-spring);
+}
+.explore-logo:hover { transform: scale(1.05); }
+.explore-logo span { color: var(--accent); }
+.explore-nav-right { display: flex; gap: 0.6rem; }
+
+.explore-body {
+  max-width: 1100px; margin: 0 auto;
+  padding: 3rem 2rem;
+  animation: fadeInUp 0.6s var(--ease-fluid) 0.2s both;
+}
+
+.explore-header { margin-bottom: 2rem; }
+@keyframes liquidShimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.explore-header h1 {
+  font-family: 'Aparajita', sans-serif;
+  font-size: clamp(2.8rem, 6vw, 4.5rem); font-weight: 800;
+  letter-spacing: -2px;
+  margin: 0.6rem 0 0.4rem;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 50%, var(--accent2) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: liquidShimmer 4s linear infinite;
+  filter: drop-shadow(0 4px 24px var(--accent-soft));
+}
+.explore-header p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1rem; }
+
+.explore-guest-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  border: 1px solid #FDE68A;
+  color: #92400E;
+  font-size: 0.82rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill);
+  animation: fadeInUp 0.4s var(--ease-fluid) 0.3s both;
+  transition: transform var(--dur-normal) var(--ease-spring);
+}
+.explore-guest-badge:hover { transform: translateY(-2px); }
+.explore-guest-badge button {
+  background: none; border: none;
+  color: var(--accent); font-weight: 600;
+  cursor: pointer; font-size: 0.82rem;
+  font-family: 'DM Sans', sans-serif;
+  transition: color var(--dur-fast) var(--ease-smooth);
+}
+
+.explore-search {
+  width: 100%; margin-bottom: 2rem;
+  border-radius: 14px; font-size: 0.95rem;
+  padding: 0.9rem 1.2rem;
+  transition: 
+    border-color var(--dur-normal) var(--ease-fluid),
+    box-shadow var(--dur-normal) var(--ease-fluid),
+    transform var(--dur-normal) var(--ease-spring);
+}
+.explore-search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft), var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.explore-empty {
+  text-align: center; color: var(--muted);
+  padding: 4rem;
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 0.95rem;
+  animation: fadeInUp 0.5s var(--ease-fluid) both;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.2rem;
+}
+
+.explore-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  padding: 1.8rem 1.4rem;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: 
+    transform var(--dur-normal) var(--ease-spring),
+    box-shadow var(--dur-normal) var(--ease-fluid),
+    border-color var(--dur-normal) var(--ease-smooth);
+  animation: cardFadeIn 0.4s var(--ease-fluid) both;
+}
+/* Spotlight effect on hover */
+.explore-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(123, 92, 246, 0.06), transparent 50%);
+  opacity: 0;
+  transition: opacity var(--dur-normal) var(--ease-smooth);
+}
+.explore-card:hover::before { opacity: 1; }
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(3px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.explore-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(123, 92, 246, 0.12);
+  border-color: var(--accent);
+}
+
+.explore-card-avatar {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 50%;
+  margin: 0 auto 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 6px 16px rgba(123, 92, 246, 0.2);
+  transition: transform var(--dur-normal) var(--ease-spring);
+}
+.explore-card:hover .explore-card-avatar { transform: scale(1.12) rotate(-3deg); }
+
+.explore-card-name {
+  font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+  font-weight: 800; font-size: 1rem;
+  margin-bottom: 0.3rem;
+  position: relative; z-index: 1;
+}
+.explore-card-bio {
+  font-size: 0.78rem; color: var(--muted);
+  margin-bottom: 0.8rem; line-height: 1.4;
+  position: relative; z-index: 1;
+}
+.explore-card-meta { margin-bottom: 1rem; position: relative; z-index: 1; }
+.explore-card-cta {
+  font-size: 0.82rem; font-weight: 600;
+  color: var(--accent);
+  position: relative; z-index: 1;
+  transition: 
+    color var(--dur-fast) var(--ease-smooth),
+    transform var(--dur-normal) var(--ease-spring);
+}
+.explore-card:hover .explore-card-cta {
+  transform: translateX(4px);
+}
+
+@media (max-width: 600px) {
+  .explore-nav { padding: 1rem 1.2rem; }
+  .explore-body { padding: 2rem 1.2rem; }
+  .explore-grid { grid-template-columns: 1fr 1fr; }
+}

@@ -1,0 +1,120 @@
+/* ═══════════════════════════════════════════════════════════════
+   HOW IT WORKS — FLUID CSS
+   Liquid dark section, organic card reveals, fluid numbering
+   ═══════════════════════════════════════════════════════════════ */
+
+.hiw-bg {
+  background: linear-gradient(180deg, var(--ink) 0%, #161622 100%);
+  padding: 0.5px 0;
+  position: relative;
+  overflow: hidden;
+}
+/* Subtle animated noise */
+.hiw-bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.06) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 65%, rgba(255,255,255,0.04) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 75% 35%, rgba(255,255,255,0.05) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 80%, rgba(255,255,255,0.04) 0%, transparent 100%);
+  pointer-events: none;
+  animation: breathe 6s ease-in-out infinite;
+}
+
+.hiw-tag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 0.35rem 1rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 1.2rem;
+  backdrop-filter: blur(8px);
+  transition: 
+    background var(--dur-fast) var(--ease-smooth),
+    border-color var(--dur-fast) var(--ease-smooth);
+}
+.hiw-tag:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.hiw-title { color: #fff; }
+.hiw-sub { color: rgba(255, 255, 255, 0.5); }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.step {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.8rem;
+  transition: 
+    transform var(--dur-normal) var(--ease-spring),
+    box-shadow var(--dur-normal) var(--ease-fluid),
+    border-color var(--dur-normal) var(--ease-smooth),
+    background var(--dur-normal) var(--ease-smooth);
+  position: relative;
+  overflow: hidden;
+}
+/* Fluid gradient overlay on hover */
+.step::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(123, 92, 246, 0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--dur-normal) var(--ease-smooth);
+  border-radius: var(--radius-lg);
+}
+.step:hover::before { opacity: 1; }
+
+.step:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(123, 92, 246, 0.2);
+  border-color: rgba(123, 92, 246, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.step-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 1rem;
+  transition: transform var(--dur-normal) var(--ease-spring);
+}
+.step:hover .step-num { transform: scale(1.1) translateX(4px); }
+
+.step h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+.step p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 900px) { .steps { grid-template-columns: 1fr; } }

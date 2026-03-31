@@ -1,0 +1,50 @@
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER — FLUID CSS
+   Subtle hover effects, organic link interactions
+   ═══════════════════════════════════════════════════════════════ */
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+  transition: background var(--dur-slow) var(--ease-smooth);
+}
+.footer:hover {
+  background: rgba(245, 242, 236, 0.5);
+}
+
+.footer .logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -1px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform var(--dur-normal) var(--ease-spring);
+}
+.footer .logo:hover { transform: scale(1.05); }
+.footer .logo span { color: var(--accent); }
+.footer p { font-size: 0.82rem; color: var(--muted); }
+
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a {
+  text-decoration: none;
+  font-size: 0.82rem;
+  color: var(--muted);
+  position: relative;
+  transition: color var(--dur-fast) var(--ease-smooth);
+}
+.footer-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--dur-normal) var(--ease-fluid);
+}
+.footer-links a:hover { color: var(--ink); }
+.footer-links a:hover::after { transform: scaleX(1); }

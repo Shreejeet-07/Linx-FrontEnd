@@ -1,0 +1,29 @@
+/* ═══════════════════════════════════════════════════════════════
+   SPACE CURSOR CANVAS
+   Full-viewport overlay, sits *above* content visually but
+   passes all pointer events through to the page below.
+   ═══════════════════════════════════════════════════════════════ */
+
+.space-cursor-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;       /* clicks / hovers pass through */
+  mix-blend-mode: screen;     /* makes glow look better on light bg */
+}
+
+/* Suppress the default cursor site-wide and replace with a small crosshair */
+body {
+  cursor: crosshair;
+}
+
+/* Keep normal cursor on interactive elements */
+a, button, input, textarea, select, label, [role="button"] {
+  cursor: pointer;
+}
+input[type="text"], input[type="email"], input[type="password"],
+input[type="search"], input[type="url"], textarea {
+  cursor: text;
+}
