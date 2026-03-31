@@ -30,7 +30,8 @@ const FEATURES = [
   },
 ];
 
-export default function Landing({ onAuth, onBrowse }) {
+export default function Landing({ onAuth, onBrowse, user }) {
+  const isAdmin = user?.role === 'admin';
   const [menuOpen, setMenuOpen] = useState(false);
   const [modal, setModal] = useState(null);
   const [activeFeature, setActiveFeature] = useState(null);
@@ -217,7 +218,8 @@ export default function Landing({ onAuth, onBrowse }) {
                       <div className="l-founder-avatar-glow" style={{ background: f.gradient }} />
                     </div>
                   )}
-                  {/* upload button */}
+                  {/* upload button — admin only */}
+                  {isAdmin && (
                   <label
                     className="l-founder-upload-btn"
                     title="Upload photo"
@@ -230,6 +232,7 @@ export default function Landing({ onAuth, onBrowse }) {
                       onChange={e => handlePhotoUpload(f.name, e.target.files[0])}
                     />
                   </label>
+                  )}
                 </div>
 
                 <div className="l-founder-name">{f.name}</div>
@@ -275,7 +278,8 @@ export default function Landing({ onAuth, onBrowse }) {
             <div className="founder-zoom-name">{zoomedFounder.name}</div>
             <div className="founder-zoom-role">Co-Founder, Linx</div>
 
-            {/* upload inside lightbox */}
+            {/* upload inside lightbox — admin only */}
+            {isAdmin && (
             <label className="founder-zoom-upload" onClick={e => e.stopPropagation()}>
               {zoomedFounder.photo ? '🔄 Change Photo' : '📷 Add Photo'}
               <input
@@ -284,6 +288,7 @@ export default function Landing({ onAuth, onBrowse }) {
                 onChange={e => handlePhotoUpload(zoomedFounder.name, e.target.files[0])}
               />
             </label>
+            )}
           </div>
         </div>
       )}

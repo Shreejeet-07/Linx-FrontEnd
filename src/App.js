@@ -86,6 +86,7 @@ export default function App() {
         <Landing
           onAuth={handleAuth}
           onBrowse={() => setPage('explore')}
+          user={user}
         />
       );
     }
