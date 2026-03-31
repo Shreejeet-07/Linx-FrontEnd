@@ -17,6 +17,7 @@ export const PROFILE_THEMES = [
 export default function ProfilePage({ user, onLogout, setUser, currentPage, onNavigate }) {
   const [bio, setBio] = useState(user.bio || '');
   const [avatar, setAvatar] = useState(user.avatar || '🌟');
+  const [photo, setPhoto] = useState(user.photo || null);
   const [username, setUsername] = useState(user.username || '');
   const [email, setEmail] = useState(user.email || '');
   const [profileTheme, setProfileTheme] = useState(user.profileTheme || 'default');
@@ -31,7 +32,7 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
   function handlePhotoFile(file) {
     if (!file || !file.type.startsWith('image/')) return;
     const reader = new FileReader();
-    reader.onload = e => setUser({ ...user, photo: e.target.result });
+    reader.onload = e => setPhoto(e.target.result);
     reader.readAsDataURL(file);
   }
 
@@ -50,9 +51,9 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
     if (Object.keys(newErrors).length) { setErrors(newErrors); return; }
     setErrors({});
 
-    const profileRes = await updateProfile(user.id, { bio, avatar, photo: user.photo || null });
+    const profileRes = await updateProfile(user.id, { bio, avatar, photo });
     if (profileRes) {
-      setUser({ ...user, bio: profileRes.bio, avatar: profileRes.avatar, photo: profileRes.photo, username, email, profileTheme });
+      setUser({ ...user, bio: profileRes.bio, avatar: profileRes.avatar, photo: profileRes.photo || photo, username, email, profileTheme });
     }
 
     setSaved(true);
@@ -85,7 +86,7 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
               <div className="pp-preview-content">
                 <div className="pp-preview-avatar-ring" style={{ background: `linear-gradient(135deg,${currentTheme.accent},${currentTheme.accent}88)` }}>
                   <div className="pp-preview-avatar">
-                    {user.photo ? <img src={user.photo} alt="preview" /> : <span>{avatar || '🌟'}</span>}
+                    {photo ? <img src={photo} alt="preview" /> : <span>{avatar || '🌟'}</span>}
                   </div>
                 </div>
                 <div className="pp-preview-name">@{username || user.username}</div>
@@ -166,10 +167,10 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
                       onDrop={handlePhotoDrop}
                       onClick={() => document.getElementById('ppPhotoInput').click()}
                     >
-                      {user.photo ? (
+                      {photo ? (
                         <div className="pp-photo-preview">
-                          <img src={user.photo} alt="profile" />
-                          <button type="button" className="pp-photo-remove" onClick={e => { e.stopPropagation(); setUser({ ...user, photo: null }); }}>×</button>
+                          <img src={photo} alt="profile" />
+                          <button type="button" className="pp-photo-remove" onClick={e => { e.stopPropagation(); setPhoto(null); }}>×</button>
                         </div>
                       ) : (
                         <div className="pp-photo-placeholder">
