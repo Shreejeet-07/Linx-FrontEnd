@@ -15,13 +15,14 @@ export default function NotificationsPage({ user, onLogout, setUser, currentPage
   const [notifs, setNotifs] = useState([]);
 
   useEffect(() => {
-    const n = getNotifications(user.id);
-    setNotifs(n);
-    markNotificationsRead(user.id);
+    getNotifications().then(n => {
+      setNotifs(n);
+      markNotificationsRead();
+    });
   }, [user.id]);
 
-  function handleClear() {
-    clearNotifications(user.id);
+  async function handleClear() {
+    await clearNotifications();
     setNotifs([]);
   }
 

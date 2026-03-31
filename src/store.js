@@ -118,9 +118,15 @@ export async function saveFounderPhoto(name, photo) {
 }
 
 // ── NOTIFICATIONS ─────────────────────────────────────────
-export function getNotifications() { return []; }
-export function markNotificationsRead() {}
-export function clearNotifications() {}
+export async function getNotifications() {
+  try { return await req('GET', '/api/notifications'); } catch { return []; }
+}
+export async function markNotificationsRead() {
+  try { await req('PATCH', '/api/notifications/read'); } catch {}
+}
+export async function clearNotifications() {
+  try { await req('DELETE', '/api/notifications'); } catch {}
+}
 
 // ── ADMIN ─────────────────────────────────────────────────
 export async function getAllUsers() {
