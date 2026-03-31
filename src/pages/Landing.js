@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AuthModal from '../components/AuthModal';
 import ThemeSwitcher from '../components/ThemeSwitcher';
+import { getFounderPhotos, saveFounderPhoto } from '../store';
 import './Landing.css';
 
 const FEATURES = [
@@ -36,19 +37,18 @@ export default function Landing({ onAuth, onBrowse, user }) {
   const [modal, setModal] = useState(null);
   const [activeFeature, setActiveFeature] = useState(null);
   const [zoomedFounder, setZoomedFounder] = useState(null);
-  const [founderPhotos, setFounderPhotos] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('linx_founder_photos') || '{}'); }
-    catch { return {}; }
-  });
+  const [founderPhotos, setFounderPhotos] = useState({});
 
-  function handlePhotoUpload(name, file) {
+  useEffect(() => {
+    getFounderPhotos().then(setFounderPhotos);
+  }, []);
+
+  async function handlePhotoUpload(name, file) {
     if (!file || !file.type.startsWith('image/')) return;
     const reader = new FileReader();
-    reader.onload = e => {
-      const updated = { ...founderPhotos, [name]: e.target.result };
+    reader.onload = async e => {
+      const updated = await saveFounderPhoto(name, e.target.result);
       setFounderPhotos(updated);
-      localStorage.setItem('linx_founder_photos', JSON.stringify(updated));
-      // update zoomed founder photo live if open
       setZoomedFounder(prev => prev?.name === name ? { ...prev, photo: e.target.result } : prev);
     };
     reader.readAsDataURL(file);

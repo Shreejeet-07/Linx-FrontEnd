@@ -108,6 +108,15 @@ export async function getMe() {
   } catch { return null; }
 }
 
+// ── FOUNDER PHOTOS ─────────────────────────────────────────
+export async function getFounderPhotos() {
+  try { return await req('GET', '/api/founder-photos'); } catch { return {}; }
+}
+
+export async function saveFounderPhoto(name, photo) {
+  try { return await req('POST', '/api/founder-photos', { name, photo }); } catch { return {}; }
+}
+
 // ── NOTIFICATIONS ─────────────────────────────────────────
 export function getNotifications() { return []; }
 export function markNotificationsRead() {}
