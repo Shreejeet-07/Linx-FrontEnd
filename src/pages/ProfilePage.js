@@ -50,9 +50,9 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
     if (Object.keys(newErrors).length) { setErrors(newErrors); return; }
     setErrors({});
 
-    const profileRes = await updateProfile(user.id, { bio, avatar });
+    const profileRes = await updateProfile(user.id, { bio, avatar, photo: user.photo || null });
     if (profileRes) {
-      setUser({ ...user, bio: profileRes.bio, avatar: profileRes.avatar, username, email, profileTheme });
+      setUser({ ...user, bio: profileRes.bio, avatar: profileRes.avatar, photo: profileRes.photo, username, email, profileTheme });
     }
 
     setSaved(true);
