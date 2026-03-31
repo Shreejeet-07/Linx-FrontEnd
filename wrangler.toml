@@ -1,8 +1,6 @@
 name = "linx-frontend"
 compatibility_date = "2024-01-01"
-
-[site]
-bucket = "./build"
+pages_build_output_dir = "./build"
 
 [build]
 command = "npm run build"
