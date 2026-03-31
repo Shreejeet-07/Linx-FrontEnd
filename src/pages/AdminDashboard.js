@@ -3,7 +3,7 @@ import { getAllUsers, adminDeleteUser, adminDeleteLink } from '../store';
 import AppNav from '../components/AppNav';
 import './AdminDashboard.css';
 
-export default function AdminDashboard({ user, onLogout, onViewProfile }) {
+export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLanding }) {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState(null);
@@ -51,6 +51,7 @@ export default function AdminDashboard({ user, onLogout, onViewProfile }) {
             <span>{users.length} users</span>
             <span>{totalLinks} links</span>
             <span>{totalClicks} clicks</span>
+            <button className="btn btn-ghost" style={{ fontSize: '0.82rem', marginLeft: '1rem' }} onClick={onGoToLanding}>🏠 Landing Page</button>
           </div>
         </div>
 

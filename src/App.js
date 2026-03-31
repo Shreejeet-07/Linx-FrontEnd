@@ -11,7 +11,7 @@ import './App.css';
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [page, setPage] = useState('landing');   // 'landing' | 'explore' | 'profile' | 'dashboard' | 'profile-edit' | 'admin'
+  const [page, setPage] = useState('landing');
   const [profileId, setProfileId] = useState(null);
 
   useEffect(() => {
@@ -31,6 +31,7 @@ export default function App() {
 
   function handleLogout() {
     localStorage.removeItem('linx_session');
+    localStorage.removeItem('linx_token');
     setUser(null);
     setPage('landing');
   }
@@ -45,117 +46,46 @@ export default function App() {
     setPage('profile');
   }
 
-  // Navigate between authenticated pages
   function handleNavigate(dest) {
     if (dest === 'dashboard') setPage('dashboard');
     else if (dest === 'explore') setPage('explore');
     else if (dest === 'profile') setPage('profile-edit');
     else if (dest === 'notifications') setPage('notifications');
+    else if (dest === 'admin') setPage('admin');
+    else if (dest === 'landing') setPage('landing');
   }
 
-  // Shared nav props for authenticated pages
-  const navProps = {
-    user,
-    onLogout: handleLogout,
-    setUser: handleSetUser,
-    onNavigate: handleNavigate,
-  };
+  const navProps = { user, onLogout: handleLogout, setUser: handleSetUser, onNavigate: handleNavigate };
 
-  // Also show landing with admin context when admin navigates back
-  const [landingUser, setLandingUser] = useState(() => {
-    const saved = localStorage.getItem('linx_session');
-    return saved ? JSON.parse(saved) : null;
-  });
+  let content;
 
   if (!user) {
-    // ── Guest routes ──
     if (page === 'explore') {
-      content = (
-        <Explore
-          onViewProfile={openProfile}
-          onBack={() => setPage('landing')}
-          onAuth={handleAuth}
-        />
-      );
+      content = <Explore onViewProfile={openProfile} onBack={() => setPage('landing')} onAuth={handleAuth} />;
     } else if (page === 'profile' && profileId) {
-      content = (
-        <ProfileView
-          userId={profileId}
-          onBack={() => setPage('explore')}
-          isGuest
-        />
-      );
+      content = <ProfileView userId={profileId} onBack={() => setPage('explore')} isGuest />;
     } else {
-      content = (
-        <Landing
-          onAuth={handleAuth}
-          onBrowse={() => setPage('explore')}
-          user={user}
-        />
-      );
+      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} user={null} />;
     }
   } else if (user.role === 'admin') {
-    // ── Admin routes ──
     if (page === 'landing') {
-      content = (
-        <Landing
-          onAuth={handleAuth}
-          onBrowse={() => setPage('explore')}
-          user={user}
-        />
-      );
+      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} user={user} />;
     } else if (page === 'profile' && profileId) {
-      content = (
-        <ProfileView
-          userId={profileId}
-          onBack={() => setPage('admin')}
-          isGuest
-        />
-      );
+      content = <ProfileView userId={profileId} onBack={() => setPage('admin')} isGuest />;
     } else {
-      content = (
-        <AdminDashboard
-          user={user}
-          onLogout={handleLogout}
-          onViewProfile={openProfile}
-        />
-      );
+      content = <AdminDashboard user={user} onLogout={handleLogout} onViewProfile={openProfile} onGoToLanding={() => setPage('landing')} />;
     }
   } else {
-    // ── Influencer routes ──
     if (page === 'profile' && profileId) {
-      content = (
-        <ProfileView
-          userId={profileId}
-          onBack={() => setPage('explore')}
-          isGuest
-        />
-      );
+      content = <ProfileView userId={profileId} onBack={() => setPage('explore')} isGuest />;
     } else if (page === 'explore') {
-      content = (
-        <Explore
-          onViewProfile={openProfile}
-          onBack={() => setPage('dashboard')}
-          onAuth={handleAuth}
-          currentPage="explore"
-          {...navProps}
-        />
-      );
+      content = <Explore onViewProfile={openProfile} onBack={() => setPage('dashboard')} onAuth={handleAuth} currentPage="explore" {...navProps} />;
     } else if (page === 'profile-edit') {
-      content = (
-        <ProfilePage currentPage="profile" {...navProps} />
-      );
+      content = <ProfilePage currentPage="profile" {...navProps} />;
     } else if (page === 'notifications') {
-      content = (
-        <NotificationsPage currentPage="notifications" {...navProps} />
-      );
+      content = <NotificationsPage currentPage="notifications" {...navProps} />;
     } else {
-      content = (
-        <Dashboard
-          currentPage="dashboard"
-          {...navProps}
-        />
-      );
+      content = <Dashboard currentPage="dashboard" {...navProps} />;
     }
   }
 
