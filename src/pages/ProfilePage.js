@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { updateProfile, updateUsername, updateEmail } from '../store';
+import { updateProfile } from '../store';
 import AppNav from '../components/AppNav';
 import './ProfilePage.css';
 
@@ -17,22 +17,20 @@ export const PROFILE_THEMES = [
 export default function ProfilePage({ user, onLogout, setUser, currentPage, onNavigate }) {
   const [bio, setBio] = useState(user.bio || '');
   const [avatar, setAvatar] = useState(user.avatar || '🌟');
-  const [photo, setPhoto] = useState(user.photo || null);
   const [username, setUsername] = useState(user.username || '');
   const [email, setEmail] = useState(user.email || '');
-  const [profileTheme, setProfileTheme] = useState(user.profileTheme || 'default');
   const [dragOver, setDragOver] = useState(false);
   const [saved, setSaved] = useState(false);
   const [errors, setErrors] = useState({});
   const [copiedPage, setCopiedPage] = useState(false);
 
   const myPageUrl = `${window.location.origin}/?user=${user.id}`;
-  const currentTheme = PROFILE_THEMES.find(t => t.id === profileTheme) || PROFILE_THEMES[0];
+  const currentTheme = PROFILE_THEMES[0];
 
   function handlePhotoFile(file) {
     if (!file || !file.type.startsWith('image/')) return;
     const reader = new FileReader();
-    reader.onload = e => setPhoto(e.target.result);
+    reader.onload = e => setUser({ ...user, photo: e.target.result });
     reader.readAsDataURL(file);
   }
 
@@ -51,25 +49,11 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
     if (Object.keys(newErrors).length) { setErrors(newErrors); return; }
     setErrors({});
 
-    let updated = { ...user };
-
-    if (username !== user.username) {
-      const res = updateUsername(user.id, username.trim());
-      if (res.error) { setErrors({ username: res.error }); return; }
-      updated = { ...updated, username: res.user.username };
-    }
-    if (email !== user.email) {
-      const res = updateEmail(user.id, email.trim());
-      if (res.error) { setErrors({ email: res.error }); return; }
-      updated = { ...updated, email: res.user.email };
-    }
-
-    const profileRes = await updateProfile(user.id, { bio, avatar, photo, profileTheme });
+    const profileRes = await updateProfile(user.id, { bio, avatar });
     if (profileRes) {
-      updated = { ...updated, bio: profileRes.bio, avatar: profileRes.avatar, photo: profileRes.photo, profileTheme: profileRes.profileTheme };
+      setUser({ ...user, bio: profileRes.bio, avatar: profileRes.avatar, username, email });
     }
 
-    setUser(updated);
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   }
@@ -100,7 +84,7 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
               <div className="pp-preview-content">
                 <div className="pp-preview-avatar-ring" style={{ background: `linear-gradient(135deg,${currentTheme.accent},${currentTheme.accent}88)` }}>
                   <div className="pp-preview-avatar">
-                    {photo ? <img src={photo} alt="preview" /> : <span>{avatar || '🌟'}</span>}
+                    {user.photo ? <img src={user.photo} alt="preview" /> : <span>{avatar || '🌟'}</span>}
                   </div>
                 </div>
                 <div className="pp-preview-name">@{username || user.username}</div>
@@ -148,27 +132,6 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
                   </div>
                 </div>
 
-                {/* PROFILE THEME */}
-                <div className="pp-section">
-                  <div className="pp-section-title"><span className="pp-section-icon">🎨</span> Profile Theme</div>
-                  <div className="pp-theme-grid">
-                    {PROFILE_THEMES.map(t => (
-                      <button
-                        key={t.id}
-                        type="button"
-                        className={`pp-theme-swatch${profileTheme === t.id ? ' selected' : ''}`}
-                        style={{ background: t.bg }}
-                        onClick={() => setProfileTheme(t.id)}
-                        title={t.label}
-                      >
-                        <span className="pp-theme-dot" style={{ background: t.accent }} />
-                        <span className="pp-theme-name">{t.label}</span>
-                        {profileTheme === t.id && <span className="pp-theme-check">✓</span>}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
                 {/* APPEARANCE */}
                 <div className="pp-section">
                   <div className="pp-section-title"><span className="pp-section-icon">✨</span> Appearance</div>
@@ -181,10 +144,10 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
                       onDrop={handlePhotoDrop}
                       onClick={() => document.getElementById('ppPhotoInput').click()}
                     >
-                      {photo ? (
+                      {user.photo ? (
                         <div className="pp-photo-preview">
-                          <img src={photo} alt="profile" />
-                          <button type="button" className="pp-photo-remove" onClick={e => { e.stopPropagation(); setPhoto(null); }}>×</button>
+                          <img src={user.photo} alt="profile" />
+                          <button type="button" className="pp-photo-remove" onClick={e => { e.stopPropagation(); setUser({ ...user, photo: null }); }}>×</button>
                         </div>
                       ) : (
                         <div className="pp-photo-placeholder">

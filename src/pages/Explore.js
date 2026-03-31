@@ -9,7 +9,9 @@ export default function Explore({ onViewProfile, onBack, onAuth, user, onNavigat
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState(null);
 
-  useEffect(() => { setInfluencers(getAllInfluencers()); }, []);
+  useEffect(() => {
+    getAllInfluencers().then(setInfluencers);
+  }, []);
 
   const filtered = influencers.filter(u =>
     u.username.toLowerCase().includes(search.toLowerCase()) ||

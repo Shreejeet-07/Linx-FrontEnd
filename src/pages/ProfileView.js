@@ -6,10 +6,12 @@ import './ProfileView.css';
 export default function ProfileView({ userId, onBack, isGuest }) {
   const [profile, setProfile] = useState(null);
 
-  useEffect(() => { setProfile(getPublicProfile(userId)); }, [userId]);
+  useEffect(() => {
+    getPublicProfile(userId).then(setProfile);
+  }, [userId]);
 
-  function handleClick(link) {
-    guestTrackClick(userId, link.id);
+  async function handleClick(link) {
+    await guestTrackClick(userId, link.id);
     window.open(link.url.startsWith('http') ? link.url : `https://${link.url}`, '_blank');
   }
 

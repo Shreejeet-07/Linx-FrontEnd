@@ -12,15 +12,15 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
     setError(''); setUsername(''); setEmail(''); setPassword('');
   }, [mode]);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     if (mode === 'signup' && !username.trim()) { setError('Username is required.'); return; }
     if (!email.trim() || !password.trim()) { setError('All fields are required.'); return; }
 
     const result = mode === 'signup'
-      ? signup({ username, email, password })
-      : login({ email, password });
+      ? await signup({ username, email, password })
+      : await login({ email, password });
 
     if (result.error) { setError(result.error); return; }
     onAuth(result.user);
