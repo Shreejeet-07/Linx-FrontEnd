@@ -24,9 +24,10 @@ export default function App() {
   }, []);
 
   function handleAuth(userData) {
-    localStorage.setItem('linx_session', JSON.stringify(userData));
-    setUser(userData);
-    setPage(userData.role === 'admin' ? 'admin' : 'dashboard');
+    const u = { ...userData, profileTheme: userData.profileTheme || 'default' };
+    localStorage.setItem('linx_session', JSON.stringify(u));
+    setUser(u);
+    setPage(u.role === 'admin' ? 'admin' : 'dashboard');
   }
 
   function handleLogout() {
