@@ -7,12 +7,12 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
   const [unread, setUnread] = useState(0);
 
   useEffect(() => {
-    function refresh() {
-      const n = getNotifications(user.id);
-      setUnread(n.filter(x => !x.read).length);
+    async function refresh() {
+      const n = await getNotifications();
+      setUnread(Array.isArray(n) ? n.filter(x => !x.read).length : 0);
     }
     refresh();
-    const t = setInterval(refresh, 3000);
+    const t = setInterval(refresh, 10000);
     return () => clearInterval(t);
   }, [user.id]);
 
