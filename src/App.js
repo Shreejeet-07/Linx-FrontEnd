@@ -20,6 +20,16 @@ export default function App() {
       const u = JSON.parse(saved);
       setUser(u);
       setPage(u.role === 'admin' ? 'admin' : 'dashboard');
+      // Fetch fresh user data from backend to get latest photo/profile
+      import('./store').then(({ getMe }) => {
+        getMe().then(fresh => {
+          if (fresh) {
+            const updated = { ...u, ...fresh, id: fresh.id || fresh._id };
+            localStorage.setItem('linx_session', JSON.stringify(updated));
+            setUser(updated);
+          }
+        });
+      });
     }
   }, []);
 
