@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { updateProfile } from '../store';
+import { updateProfile, getMe } from '../store';
 import AppNav from '../components/AppNav';
 import './ProfilePage.css';
 
@@ -53,7 +53,12 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
 
     const profileRes = await updateProfile(user.id, { bio, avatar, photo, profileTheme });
     if (profileRes) {
-      setUser({ ...user, bio: profileRes.bio, avatar: profileRes.avatar, photo: profileRes.photo || photo, username, email, profileTheme: profileRes.profileTheme || profileTheme });
+      const fresh = await getMe();
+      const updated = fresh
+        ? { ...user, ...fresh, id: fresh.id || fresh._id, profileTheme: profileTheme }
+        : { ...user, bio, avatar, photo, profileTheme, username, email };
+      setUser(updated);
+      setPhoto(updated.photo || null);
     }
 
     setSaved(true);
