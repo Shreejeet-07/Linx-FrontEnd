@@ -114,6 +114,9 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
               <div className="pp-form-header">
                 <h2>Edit Profile</h2>
                 <p>Changes are saved to the database instantly</p>
+                <div style={{ marginTop: '0.8rem', padding: '0.7rem 1rem', background: 'rgba(123,92,246,0.08)', border: '1px solid rgba(123,92,246,0.2)', borderRadius: '10px', fontSize: '0.82rem', color: 'var(--muted)', lineHeight: 1.6 }}>
+                  💡 <strong>Tip:</strong> If you can't see your profile photo, refresh the page. If you're still unable to see it, please upload it again.
+                </div>
               </div>
 
               <form onSubmit={handleSave} className="pp-form">
