@@ -437,7 +437,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: liquidShimmer 2.5s linear infinite;
+  animation: liquidShimmer 5s linear infinite;
   filter: drop-shadow(0 0 20px rgba(123,92,246,0.6)) drop-shadow(0 0 40px rgba(123,92,246,0.3));
 }
 .l-cta p { color: rgba(255, 255, 255, 0.5); margin-bottom: 1.8rem; position: relative; z-index: 1; }
