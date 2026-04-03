@@ -1,4 +1,4 @@
-const API = 'https://linxbackend.onrender.com';
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function getToken() { return localStorage.getItem('linx_token'); }
 function setToken(t) { localStorage.setItem('linx_token', t); }
@@ -13,12 +13,35 @@ async function req(method, path, body) {
     headers,
     body: body ? JSON.stringify(body) : undefined,
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
+  const text = await res.text();
+  let data;
+  try { data = JSON.parse(text); } catch { throw new Error('Server error — backend may be down or not deployed yet'); }
+  if (!res.ok && res.status !== 202) throw new Error(data.message || 'Request failed');
   return data;
 }
 
 // ── AUTH ──────────────────────────────────────────────────
+export async function googleAuth({ credential, password, username }) {
+  try {
+    const data = await req('POST', '/api/google-auth', { credential, password, username });
+    if (data.message === 'new_user') return { newUser: true, email: data.email };
+    setToken(data.token);
+    return { user: { ...data.user, id: data.user.id || data.user._id } };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
+export async function adminLogin({ email, password }) {
+  try {
+    const data = await req('POST', '/api/login', { email, password });
+    setToken(data.token);
+    return { user: { ...data.user, id: data.user.id || data.user._id } };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
 export async function signup({ username, email, password }) {
   try {
     const data = await req('POST', '/api/signup', { username, email, password });
@@ -29,9 +52,9 @@ export async function signup({ username, email, password }) {
   }
 }
 
-export async function login({ email, password }) {
+export async function login({ emailOrUsername, password }) {
   try {
-    const data = await req('POST', '/api/login', { email, password });
+    const data = await req('POST', '/api/login', { email: emailOrUsername, password });
     setToken(data.token);
     return { user: { ...data.user, id: data.user.id || data.user._id } };
   } catch (err) {
@@ -61,31 +84,33 @@ export async function guestTrackClick(userId, linkId) {
 }
 
 // ── INFLUENCER LINKS ──────────────────────────────────────
+const mapLink = l => ({ ...l, id: l._id || l.id, clicks: l.clicks || 0 });
+
 export async function getLinks() {
   try {
     const data = await req('GET', '/api/links');
-    return data.map(l => ({ ...l, id: l._id || l.id }));
+    return data.map(mapLink);
   } catch { return []; }
 }
 
 export async function addLink(userId, { title, url, icon = '🔗' }) {
   try {
     const data = await req('POST', '/api/links', { title, url, icon });
-    return data.map(l => ({ ...l, id: l._id || l.id }));
+    return data.map(mapLink);
   } catch { return []; }
 }
 
 export async function updateLink(userId, linkId, patch) {
   try {
     const data = await req('PATCH', `/api/links/${linkId}`, patch);
-    return data.map(l => ({ ...l, id: l._id || l.id }));
+    return data.map(mapLink);
   } catch { return []; }
 }
 
 export async function deleteLink(userId, linkId) {
   try {
     const data = await req('DELETE', `/api/links/${linkId}`);
-    return data.map(l => ({ ...l, id: l._id || l.id }));
+    return data.map(mapLink);
   } catch { return []; }
 }
 

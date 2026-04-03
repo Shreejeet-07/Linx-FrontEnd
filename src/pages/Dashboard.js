@@ -16,6 +16,12 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
     getLinks(user.id).then(setLinks);
   }, [user.id]);
 
+  useEffect(() => {
+    const refresh = () => getLinks(user.id).then(setLinks);
+    window.addEventListener('focus', refresh);
+    return () => window.removeEventListener('focus', refresh);
+  }, [user.id]);
+
   async function saveLink(e) {
     e.preventDefault();
     if (!form.title || !form.url) return;
@@ -40,11 +46,11 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
     setLinks(updated);
   }
 
-  function handleClick(link) {
+  async function handleClick(link) {
     if (!link.active) return;
-    trackClick(user.id, link.id);
-    setLinks(prev => prev.map(l => l.id === link.id ? { ...l, clicks: l.clicks + 1 } : l));
     window.open(link.url.startsWith('http') ? link.url : `https://${link.url}`, '_blank');
+    await trackClick(user.id, link.id);
+    getLinks(user.id).then(setLinks);
   }
 
   function startEdit(link) {
