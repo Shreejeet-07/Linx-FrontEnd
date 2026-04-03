@@ -174,3 +174,14 @@ export async function broadcastAnnouncement(message) {
     return { error: err.message };
   }
 }
+
+// ── AI ───────────────────────────────────────────────
+export async function generateBio(username, links) {
+  try { return await req('POST', '/api/ai/bio', { username, links }); } catch { return null; }
+}
+export async function generateLinkTitle(url) {
+  try { return await req('POST', '/api/ai/link-title', { url }); } catch { return null; }
+}
+export async function roastProfile(username, bio, links) {
+  try { return await req('POST', '/api/ai/roast', { username, bio, links }); } catch { return null; }
+}
