@@ -35,12 +35,12 @@ export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLa
   const totalLinks = users.reduce((s, u) => s + (u.links?.length || 0), 0);
   const totalClicks = users.reduce((s, u) => s + (u.links || []).reduce((ls, l) => ls + l.clicks, 0), 0);
 
-  const NAV = [
-    ['users', '👥', 'Users'],
-    ['broadcast', '📢', 'Broadcast'],
-  ];
-
-  async function handleBroadcast(e) {
+  function handleAdminNav(dest) {
+    if (dest === 'users') setTab('users');
+    else if (dest === 'broadcast') setTab('broadcast');
+    else if (dest === 'landing') onGoToLanding();
+    else if (dest === 'explore' || dest === 'leaderboard' || dest === 'notifications') onGoToLanding();
+  }
     e.preventDefault();
     if (!broadcastMsg.trim()) return;
     setBroadcastStatus('sending');
@@ -56,29 +56,15 @@ export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLa
 
   return (
     <div className="admin-layout">
-      <AppNav user={user} currentPage="admin" onNavigate={() => {}} onLogout={onLogout} />
+      <AppNav user={user} currentPage={tab} onNavigate={handleAdminNav} onLogout={onLogout} />
 
       <div className="admin-content">
-        <div className="admin-tabbar">
-          {NAV.map(([id, icon, label]) => (
-            <button key={id} className={`admin-tabbar-item${tab === id ? ' active' : ''}`} onClick={() => setTab(id)}>
-              <span>{icon}</span> {label}
-            </button>
-          ))}
-          <div className="admin-tabbar-stats">
-            <span>{users.length} users</span>
-            <span>{totalLinks} links</span>
-            <span>{totalClicks} clicks</span>
-            <button className="btn btn-ghost" style={{ fontSize: '0.82rem', marginLeft: '1rem' }} onClick={onGoToLanding}>🏠 Landing Page</button>
-          </div>
-        </div>
-
         <main className="admin-main">
           {tab === 'users' && (
             <>
               <div className="admin-header">
                 <h1>All Users</h1>
-                <p>Full oversight of all influencers and their links</p>
+                <p>{users.length} users · {totalLinks} links · {totalClicks} clicks</p>
               </div>
 
               <div className="admin-stats">
