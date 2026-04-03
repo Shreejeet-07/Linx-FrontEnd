@@ -15,6 +15,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [page, setPage] = useState('landing');
   const [profileId, setProfileId] = useState(null);
+  const [landingModal, setLandingModal] = useState(null);
 
   useEffect(() => {
     // Check for public profile link: ?user=ID
@@ -84,7 +85,7 @@ export default function App() {
 
   if (!user) {
     if (page === 'demo') {
-      content = <DemoPage onBack={() => setPage('landing')} onSignup={() => { setPage('landing'); }} />;
+      content = <DemoPage onBack={() => setPage('landing')} onSignup={() => { setPage('landing'); setLandingModal('signup'); }} />;
     } else if (page === 'explore') {
       content = <Explore onViewProfile={openProfile} onBack={() => setPage('landing')} onAuth={handleAuth} />;
     } else if (page === 'leaderboard') {
@@ -92,7 +93,7 @@ export default function App() {
     } else if (page === 'profile' && profileId) {
       content = <ProfileView userId={profileId} onBack={() => setPage('explore')} isGuest />;
     } else {
-      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} onLeaderboard={() => setPage('leaderboard')} onDemo={() => setPage('demo')} user={null} />;
+      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} onLeaderboard={() => setPage('leaderboard')} onDemo={() => setPage('demo')} user={null} initialModal={landingModal} onModalClose={() => setLandingModal(null)} />;
     }
   } else if (user.role === 'admin') {
     if (page === 'landing') {

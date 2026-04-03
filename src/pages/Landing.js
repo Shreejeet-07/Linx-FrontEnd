@@ -31,10 +31,10 @@ const FEATURES = [
   },
 ];
 
-export default function Landing({ onAuth, onBrowse, onLeaderboard, onDemo, user }) {
+export default function Landing({ onAuth, onBrowse, onLeaderboard, onDemo, user, initialModal, onModalClose }) {
   const isAdmin = user?.role === 'admin';
   const [menuOpen, setMenuOpen] = useState(false);
-  const [modal, setModal] = useState(null);
+  const [modal, setModal] = useState(initialModal || null);
   const [activeFeature, setActiveFeature] = useState(null);
   const [zoomedFounder, setZoomedFounder] = useState(null);
   const [founderPhotos, setFounderPhotos] = useState({});
@@ -249,7 +249,7 @@ export default function Landing({ onAuth, onBrowse, onLeaderboard, onDemo, user 
         <p>© 2026 Linx. Made with ♥ by the founders.</p>
       </footer>
 
-      {modal && <AuthModal mode={modal} onClose={() => setModal(null)} onToggle={setModal} onAuth={onAuth} />}
+      {modal && <AuthModal mode={modal} onClose={() => { setModal(null); if (onModalClose) onModalClose(); }} onToggle={setModal} onAuth={onAuth} />}
 
       {/* FOUNDER ZOOM LIGHTBOX */}
       {zoomedFounder && (
