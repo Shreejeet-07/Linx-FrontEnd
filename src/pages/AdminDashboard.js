@@ -5,12 +5,13 @@ import './AdminDashboard.css';
 
 export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLanding }) {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState(null);
   const [tab, setTab] = useState('users');
 
   useEffect(() => {
-    getAllUsers().then(setUsers);
+    getAllUsers().then(data => { setUsers(data); setLoading(false); });
   }, []);
 
   async function removeUser(id) {
@@ -80,8 +81,20 @@ export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLa
               </div>
 
               <div className="admin-users">
-                {filtered.length === 0 && <div className="admin-empty">{users.length === 0 ? 'No influencers have signed up yet.' : 'No results found.'}</div>}
-                {filtered.map(u => (
+                {loading && Array.from({ length: 5 }).map((_, i) => (
+                  <div className="admin-user-card" key={i} style={{ padding: '1.2rem 1.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <div className="skel" style={{ width: 44, height: 44, borderRadius: '50%', flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <div className="skel" style={{ height: 12, width: '30%', marginBottom: 8 }} />
+                        <div className="skel" style={{ height: 10, width: '50%' }} />
+                      </div>
+                      <div className="skel" style={{ height: 10, width: '10%' }} />
+                    </div>
+                  </div>
+                ))}
+                {!loading && filtered.length === 0 && <div className="admin-empty">{users.length === 0 ? 'No influencers have signed up yet.' : 'No results found.'}</div>}
+                {!loading && filtered.map(u => (
                   <div className="admin-user-card" key={u.id}>
                     <div className="admin-user-header" onClick={() => setExpanded(expanded === u.id ? null : u.id)}>
                       <div className="admin-user-left">
