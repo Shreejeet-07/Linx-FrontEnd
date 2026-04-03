@@ -274,6 +274,14 @@
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
   animation: fadeInUp 0.3s var(--ease-fluid) both;
   border: 1px solid rgba(255,255,255,0.1);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.pv-music-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) scale(0.95);
+  height: 0;
+  overflow: hidden;
 }
 @media (max-width: 480px) {
   .pv-music-embed { width: 260px; }

@@ -47,6 +47,7 @@ export default function ProfileView({ userId, onBack, isGuest }) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [musicOpen, setMusicOpen] = useState(true);
+  const embedUrl = profile ? getMusicEmbed(profile.musicUrl) : null;
   const isDirectLink = new URLSearchParams(window.location.search).get('user') === userId;
 
   useEffect(() => {
@@ -174,25 +175,28 @@ export default function ProfileView({ userId, onBack, isGuest }) {
       </div>
 
       {/* ── Floating Music Player ── */}
-      {profile.musicUrl && getMusicEmbed(profile.musicUrl) && (
-        <div className={`pv-music-player${musicOpen ? ' open' : ''}`}>
-          <button className="pv-music-toggle" onClick={() => setMusicOpen(o => !o)}
-            style={{ background: theme.accent }}>
-            {musicOpen ? '✕' : '🎵'}
+      {profile.musicUrl && embedUrl && (
+        <div className="pv-music-player">
+          {/* iframe always mounted so autoplay triggers on load */}
+          <div className={`pv-music-embed${musicOpen ? '' : ' pv-music-hidden'}`}>
+            <iframe
+              src={embedUrl}
+              width="100%"
+              height={profile.musicUrl.includes('spotify') ? '80' : '120'}
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              allowFullScreen
+              title="Background Music"
+            />
+          </div>
+          <button
+            className="pv-music-toggle"
+            onClick={() => setMusicOpen(o => !o)}
+            style={{ background: theme.accent }}
+            title={musicOpen ? 'Hide player' : 'Show player'}
+          >
+            {musicOpen ? '🔇' : '🎵'}
           </button>
-          {musicOpen && (
-            <div className="pv-music-embed">
-              <iframe
-                src={getMusicEmbed(profile.musicUrl)}
-                width="100%"
-                height={profile.musicUrl.includes('spotify') ? '80' : '120'}
-                frameBorder="0"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                allowFullScreen
-                title="Background Music"
-              />
-            </div>
-          )}
         </div>
       )}
     </div>
