@@ -105,9 +105,9 @@ export async function trackClick(userId, linkId) {
 }
 
 // ── PROFILE ───────────────────────────────────────────────
-export async function updateProfile(userId, { bio, avatar, photo, profileTheme }) {
+export async function updateProfile(userId, { bio, avatar, photo, profileTheme, musicUrl }) {
   try {
-    const data = await req('PATCH', '/api/me', { bio, avatar, photo, profileTheme });
+    const data = await req('PATCH', '/api/me', { bio, avatar, photo, profileTheme, musicUrl });
     return { ...data, id: data._id || data.id };
   } catch (err) {
     console.error('updateProfile failed:', err.message);

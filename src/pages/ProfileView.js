@@ -22,6 +22,21 @@ function timeAgo(iso) {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
+function getMusicEmbed(url) {
+  if (!url) return null;
+  // Spotify track/playlist/album
+  const spotifyMatch = url.match(/spotify\.com\/(track|playlist|album)\/([a-zA-Z0-9]+)/);
+  if (spotifyMatch) {
+    return `https://open.spotify.com/embed/${spotifyMatch[1]}/${spotifyMatch[2]}?utm_source=generator&theme=0`;
+  }
+  // YouTube
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if (ytMatch) {
+    return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=0`;
+  }
+  return null;
+}
+
 export default function ProfileView({ userId, onBack, isGuest }) {
   const [profile, setProfile] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -31,6 +46,7 @@ export default function ProfileView({ userId, onBack, isGuest }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [musicOpen, setMusicOpen] = useState(false);
   const isDirectLink = new URLSearchParams(window.location.search).get('user') === userId;
 
   useEffect(() => {
@@ -156,6 +172,28 @@ export default function ProfileView({ userId, onBack, isGuest }) {
           </div>
         )}
       </div>
+
+      {/* ── Floating Music Player ── */}
+      {profile.musicUrl && getMusicEmbed(profile.musicUrl) && (
+        <div className={`pv-music-player${musicOpen ? ' open' : ''}`}>
+          <button className="pv-music-toggle" onClick={() => setMusicOpen(o => !o)}
+            style={{ background: theme.accent }}>
+            {musicOpen ? '✕' : '🎵'}
+          </button>
+          {musicOpen && (
+            <div className="pv-music-embed">
+              <iframe
+                src={getMusicEmbed(profile.musicUrl)}
+                width="100%"
+                height={profile.musicUrl.includes('spotify') ? '80' : '120'}
+                frameBorder="0"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                title="Background Music"
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

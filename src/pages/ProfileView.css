@@ -240,6 +240,46 @@
   animation: fadeInUp 0.5s var(--ease-fluid) both;
 }
 
+/* ── Floating Music Player ── */
+.pv-music-player {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+.pv-music-toggle {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: breathe 2.5s ease-in-out infinite;
+}
+.pv-music-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+}
+.pv-music-embed {
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  overflow: hidden;
+  width: 300px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  animation: fadeInUp 0.3s var(--ease-fluid) both;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+@media (max-width: 480px) {
+  .pv-music-embed { width: 260px; }
+  .pv-music-player { bottom: 1rem; right: 1rem; }
+}
+
 /* ── Average Rating ───────────────────────────────────── */
 .pv-avg-rating {
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;

@@ -21,6 +21,7 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
   const [username, setUsername] = useState(user.username || '');
   const [email, setEmail] = useState(user.email || '');
   const [profileTheme, setProfileTheme] = useState(user.profileTheme || 'default');
+  const [musicUrl, setMusicUrl] = useState(user.musicUrl || '');
   const [dragOver, setDragOver] = useState(false);
   const [saved, setSaved] = useState(false);
   const [errors, setErrors] = useState({});
@@ -51,9 +52,9 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
     if (Object.keys(newErrors).length) { setErrors(newErrors); return; }
     setErrors({});
 
-    const profileRes = await updateProfile(user.id, { bio, avatar, photo, profileTheme });
+    const profileRes = await updateProfile(user.id, { bio, avatar, photo, profileTheme, musicUrl });
     if (profileRes) {
-      const updated = { ...user, bio, avatar, photo: photo || null, profileTheme };
+      const updated = { ...user, bio, avatar, photo: photo || null, profileTheme, musicUrl };
       setUser(updated);
       setPhoto(updated.photo || null);
       setSaved(true);
@@ -231,6 +232,19 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
                   <div className="pp-field">
                     <label>Bio</label>
                     <textarea value={bio} onChange={e => setBio(e.target.value)} placeholder="Tell the world about yourself..." rows={3} />
+                  </div>
+                  <div className="pp-field">
+                    <label>🎵 Background Music <span className="pp-label-hint">(Spotify or YouTube URL)</span></label>
+                    <div className="pp-input-wrap">
+                      <span className="pp-input-prefix">🎵</span>
+                      <input
+                        type="url"
+                        value={musicUrl}
+                        onChange={e => setMusicUrl(e.target.value)}
+                        placeholder="https://open.spotify.com/track/... or youtube.com/watch?v=..."
+                      />
+                    </div>
+                    {musicUrl && <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '0.3rem' }}>✅ Music will play on your public profile</div>}
                   </div>
                 </div>
 
