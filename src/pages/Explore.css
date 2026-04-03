@@ -196,3 +196,20 @@
   .explore-body { padding: 2rem 1.2rem; }
   .explore-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── Skeleton loading ─────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skel {
+  background: linear-gradient(90deg, var(--border) 25%, rgba(200,200,200,0.15) 50%, var(--border) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 8px;
+}
+.explore-card-skeleton { pointer-events: none; }
+.skel-avatar { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 0.8rem; }
+.skel-name   { height: 14px; width: 70%; margin: 0 auto 0.5rem; }
+.skel-bio    { height: 10px; width: 90%; margin: 0 auto 0.8rem; }
+.skel-tag    { height: 10px; width: 40%; margin: 0 auto; }

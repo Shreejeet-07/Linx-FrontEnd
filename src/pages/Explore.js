@@ -4,13 +4,28 @@ import AuthModal from '../components/AuthModal';
 import AppNav from '../components/AppNav';
 import './Explore.css';
 
+function SkeletonCard() {
+  return (
+    <div className="explore-card explore-card-skeleton">
+      <div className="skel skel-avatar" />
+      <div className="skel skel-name" />
+      <div className="skel skel-bio" />
+      <div className="skel skel-tag" />
+    </div>
+  );
+}
+
 export default function Explore({ onViewProfile, onBack, onAuth, user, onNavigate, onLogout, currentPage }) {
   const [influencers, setInfluencers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState(null);
 
   useEffect(() => {
-    getAllInfluencers().then(setInfluencers);
+    getAllInfluencers().then(data => {
+      setInfluencers(data);
+      setLoading(false);
+    });
   }, []);
 
   const filtered = influencers.filter(u =>
@@ -54,30 +69,29 @@ export default function Explore({ onViewProfile, onBack, onAuth, user, onNavigat
           onChange={e => setSearch(e.target.value)}
         />
 
-        {filtered.length === 0 && (
-          <div className="explore-empty">
-            {influencers.length === 0
-              ? 'No creators have signed up yet. Be the first!'
-              : 'No creators match your search.'}
-          </div>
-        )}
-
         <div className="explore-grid">
-          {filtered.map(u => (
-            <div className="explore-card" key={u.id} onClick={() => onViewProfile(u.id)}>
-              <div className="explore-card-avatar">
-                {u.photo
-                  ? <img src={u.photo} alt={u.username} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                  : (u.avatar || '🌟')}
-              </div>
-              <div className="explore-card-name">@{u.username}</div>
-              {u.bio && <div className="explore-card-bio">{u.bio}</div>}
-              <div className="explore-card-meta">
-                <span className="tag tag-muted">{u.linkCount} links</span>
-              </div>
-              <div className="explore-card-cta">View Links →</div>
-            </div>
-          ))}
+          {loading
+            ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
+            : filtered.length === 0
+              ? <div className="explore-empty" style={{ gridColumn: '1/-1' }}>
+                  {influencers.length === 0 ? 'No creators have signed up yet. Be the first!' : 'No creators match your search.'}
+                </div>
+              : filtered.map(u => (
+                  <div className="explore-card" key={u.id} onClick={() => onViewProfile(u.id)}>
+                    <div className="explore-card-avatar">
+                      {u.photo
+                        ? <img src={u.photo} alt={u.username} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        : (u.avatar || '🌟')}
+                    </div>
+                    <div className="explore-card-name">@{u.username}</div>
+                    {u.bio && <div className="explore-card-bio">{u.bio}</div>}
+                    <div className="explore-card-meta">
+                      <span className="tag tag-muted">{u.linkCount} links</span>
+                    </div>
+                    <div className="explore-card-cta">View Links →</div>
+                  </div>
+                ))
+          }
         </div>
       </div>
 
