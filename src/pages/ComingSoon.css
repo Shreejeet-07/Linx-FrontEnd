@@ -1,0 +1,128 @@
+.cs-layout {
+  min-height: 100vh;
+  background: var(--paper);
+  display: grid;
+  grid-template-columns: 240px 1fr;
+}
+
+.cs-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  animation: fadeInUp 0.6s var(--ease-fluid) both;
+}
+
+.cs-card {
+  max-width: 520px;
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 3.5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+/* animated gradient border */
+.cs-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: var(--radius-xl);
+  padding: 2px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2), #ec4899, var(--accent));
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  animation: borderRotate 4s linear infinite;
+  pointer-events: none;
+}
+@keyframes borderRotate {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.cs-lock {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  animation: lockBounce 2s ease-in-out infinite;
+}
+@keyframes lockBounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%       { transform: translateY(-8px) rotate(-5deg); }
+  75%       { transform: translateY(-4px) rotate(5deg); }
+}
+
+.cs-tag {
+  display: inline-block;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 0.3rem 1rem; border-radius: 99px;
+  margin-bottom: 1.2rem;
+}
+
+.cs-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800; letter-spacing: -2px;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cs-desc {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  max-width: 380px;
+  margin-left: auto; margin-right: auto;
+}
+
+.cs-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.cs-feature {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex; align-items: center; gap: 0.5rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.cs-feature:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.cs-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  font-size: 0.82rem; font-weight: 700;
+  padding: 0.5rem 1.4rem;
+  border-radius: 99px;
+  box-shadow: 0 4px 16px var(--accent-glow);
+  animation: breathe 2.5s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .cs-layout { grid-template-columns: 1fr; }
+  .cs-main { padding: 2rem 1rem; }
+  .cs-card { padding: 2.5rem 1.5rem; }
+  .cs-features { grid-template-columns: 1fr; }
+}

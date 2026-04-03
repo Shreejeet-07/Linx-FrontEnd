@@ -180,6 +180,13 @@
   flex-shrink: 0;
   animation: badgePop 0.3s var(--ease-bounce) both;
 }
+.appnav-badge-lock {
+  background: transparent;
+  font-size: 0.85rem;
+  min-width: unset;
+  height: unset;
+  padding: 0;
+}
 @keyframes badgePop {
   from { transform: scale(0); }
   to   { transform: scale(1); }

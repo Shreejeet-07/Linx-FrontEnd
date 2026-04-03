@@ -31,6 +31,7 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
     { id: 'leaderboard',  icon: '🏆', label: 'Leaderboard'   },
     { id: 'notifications',icon: '🔔', label: 'Notifications', badge: unread },
     { id: 'profile',      icon: '👤', label: 'Profile'       },
+    { id: 'ai',           icon: '✨', label: 'AI',  badge: '🔒' },
   ];
 
   return (
@@ -59,6 +60,7 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
             <span className="appnav-icon">{p.icon}</span>
             <span className="appnav-label">{p.label}</span>
             {p.badge > 0 && <span className="appnav-badge">{p.badge}</span>}
+            {p.badge && typeof p.badge === 'string' && <span className="appnav-badge appnav-badge-lock">{p.badge}</span>}
           </button>
         ))}
       </nav>

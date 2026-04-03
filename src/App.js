@@ -8,6 +8,7 @@ import ProfilePage from './pages/ProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
 import AdminDashboard from './pages/AdminDashboard';
 import DemoPage from './pages/DemoPage';
+import ComingSoonPage from './pages/ComingSoon';
 import SpaceCursor from './components/SpaceCursor';
 import './App.css';
 
@@ -77,6 +78,7 @@ export default function App() {
     else if (dest === 'notifications') setPage('notifications');
     else if (dest === 'admin') setPage('admin');
     else if (dest === 'landing') setPage('landing');
+    else if (dest === 'ai') setPage('ai');
   }
 
   const navProps = { user, onLogout: handleLogout, setUser: handleSetUser, onNavigate: handleNavigate };
@@ -120,6 +122,8 @@ export default function App() {
       content = <ProfilePage currentPage="profile" {...navProps} />;
     } else if (page === 'notifications') {
       content = <NotificationsPage currentPage="notifications" {...navProps} />;
+    } else if (page === 'ai') {
+      content = <ComingSoonPage currentPage="ai" {...navProps} />;
     } else {
       content = <Dashboard currentPage="dashboard" {...navProps} />;
     }
