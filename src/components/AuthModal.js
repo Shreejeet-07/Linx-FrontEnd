@@ -47,33 +47,38 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
 
   useEffect(() => {
     if (!GOOGLE_CLIENT_ID) return;
-    function initGSI() {
-      if (!window.google) return;
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleResponse,
-        ux_mode: 'popup',
-      });
-      setGsiReady(true);
-    }
-    if (document.getElementById('google-gsi')) {
-      if (window.google) initGSI();
-      return;
-    }
+    if (document.getElementById('google-gsi')) { setGsiReady(true); return; }
     const script = document.createElement('script');
     script.id = 'google-gsi';
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
-    script.onload = initGSI;
+    script.onload = () => setGsiReady(true);
     document.body.appendChild(script);
-  }, [handleGoogleResponse]);
+  }, []);
 
   function openGooglePopup() {
-    if (!window.google || !gsiReady) {
-      setError('Google sign-in not ready, please wait a moment and try again.');
-      return;
-    }
-    window.google.accounts.id.prompt();
+    if (!window.google || !gsiReady) { setError('Google sign-in not ready, try again.'); return; }
+    const client = window.google.accounts.oauth2.initCodeClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: 'openid email profile',
+      ux_mode: 'popup',
+      callback: async (response) => {
+        if (response.error) { setError(response.error); return; }
+        // Exchange code for id_token via backend
+        setError('');
+        const result = await googleAuth({ code: response.code });
+        if (result.error) { setError(result.error); return; }
+        if (result.newUser) {
+          setGoogleCredential(response.code);
+          setGoogleEmail(result.email);
+          setGoogleStep(true);
+          return;
+        }
+        onAuth(result.user);
+        onClose();
+      },
+    });
+    client.requestCode();
   }
 
   async function handleGoogleSetup(e) {
