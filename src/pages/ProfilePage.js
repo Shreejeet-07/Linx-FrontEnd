@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { updateProfile, getMe } from '../store';
+import { updateProfile } from '../store';
 import AppNav from '../components/AppNav';
 import './ProfilePage.css';
 
@@ -47,16 +47,12 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
     const newErrors = {};
     if (!username.trim()) newErrors.username = 'Username is required';
     if (!email.trim()) newErrors.email = 'Email is required';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Invalid email address';
     if (Object.keys(newErrors).length) { setErrors(newErrors); return; }
     setErrors({});
 
     const profileRes = await updateProfile(user.id, { bio, avatar, photo, profileTheme });
     if (profileRes) {
-      const fresh = await getMe();
-      const updated = fresh
-        ? { ...user, ...fresh, id: fresh.id || fresh._id, profileTheme: profileTheme }
-        : { ...user, bio, avatar, photo, profileTheme, username, email };
+      const updated = { ...user, bio, avatar, photo: photo || null, profileTheme };
       setUser(updated);
       setPhoto(updated.photo || null);
     }
