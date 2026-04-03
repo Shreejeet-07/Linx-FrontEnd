@@ -5,6 +5,7 @@ import './ProfileView.css';
 
 export default function ProfileView({ userId, onBack, isGuest }) {
   const [profile, setProfile] = useState(null);
+  const isDirectLink = new URLSearchParams(window.location.search).get('user') === userId;
 
   useEffect(() => {
     getPublicProfile(userId).then(setProfile);
@@ -17,8 +18,8 @@ export default function ProfileView({ userId, onBack, isGuest }) {
 
   if (!profile) return (
     <div className="pv-layout">
-      <button className="btn btn-ghost pv-back" onClick={onBack}>← Back</button>
-      <div className="pv-not-found">Profile not found.</div>
+      {!isDirectLink && <button className="btn btn-ghost pv-back" onClick={onBack}>← Back</button>}
+      <div className="pv-loading">Loading profile…</div>
     </div>
   );
 
@@ -32,7 +33,7 @@ export default function ProfileView({ userId, onBack, isGuest }) {
         ))}
       </div>
       <div className="pv-topbar">
-        <button className="btn btn-ghost" onClick={onBack}>← Back to Explore</button>
+        {!isDirectLink && <button className="btn btn-ghost" onClick={onBack}>← Back to Explore</button>}
         {isGuest && <span className="pv-guest-tag">👁 Guest View</span>}
       </div>
 

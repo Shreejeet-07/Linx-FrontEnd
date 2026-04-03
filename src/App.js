@@ -16,6 +16,15 @@ export default function App() {
   const [profileId, setProfileId] = useState(null);
 
   useEffect(() => {
+    // Check for public profile link: ?user=ID
+    const params = new URLSearchParams(window.location.search);
+    const publicUserId = params.get('user');
+    if (publicUserId) {
+      setProfileId(publicUserId);
+      setPage('profile');
+      return;
+    }
+
     const saved = localStorage.getItem('linx_session');
     if (saved) {
       const u = JSON.parse(saved);
