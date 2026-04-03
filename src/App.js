@@ -84,7 +84,7 @@ export default function App() {
     }
   } else if (user.role === 'admin') {
     if (page === 'landing') {
-      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} user={user} />;
+      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} onLeaderboard={() => setPage('leaderboard')} user={user} />;
     } else if (page === 'profile' && profileId) {
       content = <ProfileView userId={profileId} onBack={() => setPage('admin')} isGuest />;
     } else {

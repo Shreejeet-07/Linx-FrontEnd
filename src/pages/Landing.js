@@ -126,7 +126,7 @@ export default function Landing({ onAuth, onBrowse, onLeaderboard, user }) {
                     label === 'Get Started' ? () => setModal('signup') :
                     label === 'Browse as Guest' ? onBrowse :
                     label === 'Meet the Founders' ? () => document.querySelector('.l-founders')?.scrollIntoView({ behavior: 'smooth' }) :
-                    label === 'Leaderboard' ? (onLeaderboard || onBrowse) :
+                    label === 'Leaderboard' ? onLeaderboard :
                     undefined
                   }
                   style={{ cursor: label === 'Leaderboard' ? 'pointer' : label === 'Shop My Merch' ? 'default' : 'pointer' }}>
