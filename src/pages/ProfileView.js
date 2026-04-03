@@ -24,15 +24,13 @@ function timeAgo(iso) {
 
 function getMusicEmbed(url) {
   if (!url) return null;
-  // Spotify track/playlist/album
   const spotifyMatch = url.match(/spotify\.com\/(track|playlist|album)\/([a-zA-Z0-9]+)/);
   if (spotifyMatch) {
     return `https://open.spotify.com/embed/${spotifyMatch[1]}/${spotifyMatch[2]}?utm_source=generator&theme=0&autoplay=1`;
   }
-  // YouTube
   const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   if (ytMatch) {
-    return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=0&enablejsapi=1`;
+    return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&controls=1&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&fs=0&disablekb=1&playsinline=1`;
   }
   return null;
 }
@@ -174,15 +172,14 @@ export default function ProfileView({ userId, onBack, isGuest }) {
         )}
       </div>
 
-      {/* ── Floating Music Player ── */}
       {profile.musicUrl && embedUrl && (
         <div className="pv-music-player">
-          {/* iframe always mounted so autoplay triggers on load */}
-          <div className={`pv-music-embed${musicOpen ? '' : ' pv-music-hidden'}`}>
+          {/* iframe always mounted, video hidden with 0 height */}
+          <div style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden', opacity: 0, pointerEvents: 'none' }}>
             <iframe
               src={embedUrl}
-              width="100%"
-              height={profile.musicUrl.includes('spotify') ? '80' : '120'}
+              width="1"
+              height="1"
               frameBorder="0"
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               allowFullScreen
@@ -193,10 +190,13 @@ export default function ProfileView({ userId, onBack, isGuest }) {
             className="pv-music-toggle"
             onClick={() => setMusicOpen(o => !o)}
             style={{ background: theme.accent }}
-            title={musicOpen ? 'Hide player' : 'Show player'}
+            title={musicOpen ? 'Mute music' : 'Unmute music'}
           >
-            {musicOpen ? '🔇' : '🎵'}
+            {musicOpen ? '🔊' : '🔇'}
           </button>
+          {musicOpen && (
+            <div className="pv-music-label">🎵 Now Playing</div>
+          )}
         </div>
       )}
     </div>

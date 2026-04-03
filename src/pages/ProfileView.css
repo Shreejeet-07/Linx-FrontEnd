@@ -283,6 +283,15 @@
   height: 0;
   overflow: hidden;
 }
+.pv-music-label {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  padding: 0.3rem 0.8rem;
+  border-radius: 99px;
+  animation: fadeInUp 0.3s var(--ease-fluid) both;
+}
 @media (max-width: 480px) {
   .pv-music-embed { width: 260px; }
   .pv-music-player { bottom: 1rem; right: 1rem; }
