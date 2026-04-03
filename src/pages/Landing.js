@@ -103,7 +103,7 @@ export default function Landing({ onAuth, onBrowse, onLeaderboard, onDemo, user 
           <p>Share all your links — portfolio, socials, shop — from one beautiful page. Built for creators, freelancers, and brands.</p>
           <div className="l-hero-btns">
             <button className="btn btn-primary" onClick={() => setModal('signup')}>Create your Linx →</button>
-            <button className="btn btn-secondary" onClick={onDemo}>📖 See how it works</button>
+            <button className="btn-demo" onClick={onDemo}><span>📖 See how it works</span></button>
           </div>
         </div>
 

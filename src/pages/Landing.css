@@ -157,6 +157,50 @@
   animation: fadeInUp 0.6s var(--ease-fluid) 0.45s both;
 }
 
+.btn-demo {
+  position: relative;
+  padding: 0.85rem 1.8rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    linear-gradient(135deg, var(--accent), var(--accent2), var(--accent)) border-box;
+  color: var(--ink);
+  transition:
+    transform var(--dur-normal) var(--ease-spring),
+    box-shadow var(--dur-normal) var(--ease-fluid);
+  background-size: 200% auto;
+  animation: demoBorderShine 3s linear infinite;
+}
+@keyframes demoBorderShine {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+.btn-demo::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--accent-soft), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--dur-normal) var(--ease-smooth);
+}
+.btn-demo:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 24px var(--accent-soft), 0 0 0 1px var(--accent);
+}
+.btn-demo:hover::before { opacity: 1; }
+.btn-demo span {
+  position: relative; z-index: 1;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .l-hero-visual {
   display: flex; justify-content: center;
   position: relative;
