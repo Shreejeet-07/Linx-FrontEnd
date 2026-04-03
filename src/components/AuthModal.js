@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { login, googleAuth } from '../store';
 import './AuthModal.css';
 
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const REDIRECT_URI = 'postmessage';
 
 function GoogleIcon() {
   return (
@@ -21,64 +22,55 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [googleCredential, setGoogleCredential] = useState(null);
+  const [googleCode, setGoogleCode] = useState(null);
   const [googleEmail, setGoogleEmail] = useState('');
   const [googleStep, setGoogleStep] = useState(false);
-  const [gsiReady, setGsiReady] = useState(false);
-
-  useEffect(() => {
-    setError(''); setEmailOrUsername(''); setUsername(''); setPassword('');
-    setGoogleStep(false); setGoogleCredential(null); setGoogleEmail('');
-  }, [mode]);
-
-  const handleGoogleResponse = useCallback(async (response) => {
-    setError('');
-    const result = await googleAuth({ credential: response.credential });
-    if (result.error) { setError(result.error); return; }
-    if (result.newUser) {
-      setGoogleCredential(response.credential);
-      setGoogleEmail(result.email);
-      setGoogleStep(true);
-      return;
-    }
-    onAuth(result.user);
-    onClose();
-  }, [onAuth, onClose]);
-
-  useEffect(() => {
-    if (!GOOGLE_CLIENT_ID) return;
-    if (document.getElementById('google-gsi')) { setGsiReady(true); return; }
-    const script = document.createElement('script');
-    script.id = 'google-gsi';
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.onload = () => setGsiReady(true);
-    document.body.appendChild(script);
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   function openGooglePopup() {
-    if (!window.google || !gsiReady) { setError('Google sign-in not ready, try again.'); return; }
-    const client = window.google.accounts.oauth2.initCodeClient({
+    const params = new URLSearchParams({
       client_id: GOOGLE_CLIENT_ID,
+      redirect_uri: window.location.origin,
+      response_type: 'code',
       scope: 'openid email profile',
-      ux_mode: 'popup',
-      callback: async (response) => {
-        if (response.error) { setError(response.error); return; }
-        // Exchange code for id_token via backend
+      prompt: 'select_account',
+      access_type: 'offline',
+    });
+
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+    const w = 500, h = 600;
+    const left = window.screenX + (window.outerWidth - w) / 2;
+    const top = window.screenY + (window.outerHeight - h) / 2;
+    const popup = window.open(url, 'google-auth', `width=${w},height=${h},left=${left},top=${top}`);
+
+    const timer = setInterval(async () => {
+      try {
+        if (!popup || popup.closed) { clearInterval(timer); return; }
+        const popupUrl = popup.location.href;
+        if (!popupUrl.includes(window.location.origin)) return;
+
+        clearInterval(timer);
+        const code = new URL(popupUrl).searchParams.get('code');
+        popup.close();
+
+        if (!code) { setError('Google sign-in cancelled.'); return; }
+
+        setLoading(true);
         setError('');
-        const result = await googleAuth({ code: response.code });
+        const result = await googleAuth({ code });
+        setLoading(false);
+
         if (result.error) { setError(result.error); return; }
         if (result.newUser) {
-          setGoogleCredential(response.code);
+          setGoogleCode(code);
           setGoogleEmail(result.email);
           setGoogleStep(true);
           return;
         }
         onAuth(result.user);
         onClose();
-      },
-    });
-    client.requestCode();
+      } catch { /* cross-origin, still on Google's page */ }
+    }, 300);
   }
 
   async function handleGoogleSetup(e) {
@@ -86,7 +78,9 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
     setError('');
     if (!username.trim()) { setError('Username is required.'); return; }
     if (password.length < 8) { setError('Password must be at least 8 characters.'); return; }
-    const result = await googleAuth({ credential: googleCredential, password, username });
+    setLoading(true);
+    const result = await googleAuth({ code: googleCode, password, username });
+    setLoading(false);
     if (result.error) { setError(result.error); return; }
     onAuth(result.user);
     onClose();
@@ -96,7 +90,9 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
     e.preventDefault();
     setError('');
     if (!emailOrUsername.trim() || !password.trim()) { setError('All fields are required.'); return; }
+    setLoading(true);
     const result = await login({ emailOrUsername, password });
+    setLoading(false);
     if (result.error) { setError(result.error); return; }
     onAuth(result.user);
     onClose();
@@ -128,7 +124,9 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
               </div>
             </div>
             {error && <p className="modal-error">{error}</p>}
-            <button type="submit" className="btn btn-primary modal-submit">Create my Linx →</button>
+            <button type="submit" className="btn btn-primary modal-submit" disabled={loading}>
+              {loading ? 'Creating…' : 'Create my Linx →'}
+            </button>
           </form>
         </div>
       </div>
@@ -143,8 +141,8 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
           <button type="button" className="modal-close" onClick={onClose}>×</button>
           <h2>Create Account</h2>
           <p className="modal-sub">Sign up with your Google account — free, no credit card needed.</p>
-          <button type="button" className="btn-google-custom" onClick={openGooglePopup}>
-            <GoogleIcon /> Sign up with Google
+          <button type="button" className="btn-google-custom" onClick={openGooglePopup} disabled={loading}>
+            <GoogleIcon /> {loading ? 'Signing up…' : 'Sign up with Google'}
           </button>
           {error && <p className="modal-error">{error}</p>}
           <p className="modal-toggle">
@@ -178,11 +176,13 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
             </div>
           </div>
           {error && <p className="modal-error">{error}</p>}
-          <button type="submit" className="btn btn-primary modal-submit">Log in →</button>
+          <button type="submit" className="btn btn-primary modal-submit" disabled={loading}>
+            {loading ? 'Logging in…' : 'Log in →'}
+          </button>
         </form>
         <div className="modal-divider"><span>or</span></div>
-        <button type="button" className="btn-google-custom" onClick={openGooglePopup}>
-          <GoogleIcon /> Sign in with Google
+        <button type="button" className="btn-google-custom" onClick={openGooglePopup} disabled={loading}>
+          <GoogleIcon /> {loading ? 'Signing in…' : 'Sign in with Google'}
         </button>
         <p className="modal-toggle">
           Don't have an account?
