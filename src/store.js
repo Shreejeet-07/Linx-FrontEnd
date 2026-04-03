@@ -26,27 +26,8 @@ export async function googleAuth({ credential, password, username }) {
     const data = await req('POST', '/api/google-auth', { credential, password, username });
     if (data.message === 'new_user') return { newUser: true, email: data.email };
     setToken(data.token);
-    return { user: { ...data.user, id: data.user.id || data.user._id } };
-  } catch (err) {
-    return { error: err.message };
-  }
-}
-
-export async function adminLogin({ email, password }) {
-  try {
-    const data = await req('POST', '/api/login', { email, password });
-    setToken(data.token);
-    return { user: { ...data.user, id: data.user.id || data.user._id } };
-  } catch (err) {
-    return { error: err.message };
-  }
-}
-
-export async function signup({ username, email, password }) {
-  try {
-    const data = await req('POST', '/api/signup', { username, email, password });
-    setToken(data.token);
-    return { user: { ...data.user, id: data.user.id || data.user._id } };
+    const u = data.user;
+    return { user: { ...u, id: String(u.id || u._id) } };
   } catch (err) {
     return { error: err.message };
   }
@@ -56,7 +37,8 @@ export async function login({ emailOrUsername, password }) {
   try {
     const data = await req('POST', '/api/login', { email: emailOrUsername, password });
     setToken(data.token);
-    return { user: { ...data.user, id: data.user.id || data.user._id } };
+    const u = data.user;
+    return { user: { ...u, id: String(u.id || u._id) } };
   } catch (err) {
     return { error: err.message };
   }
