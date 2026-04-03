@@ -6,6 +6,7 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -51,7 +52,12 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
           </div>
           <div className="field">
             <label>Password</label>
-            <input type="password" placeholder="Min 8 characters" value={password} onChange={e => setPassword(e.target.value)} />
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <input type={showPassword ? 'text' : 'password'} placeholder="Min 8 characters" value={password} onChange={e => setPassword(e.target.value)} style={{ flex: 1, paddingRight: '2.5rem' }} />
+              <button type="button" onClick={() => setShowPassword(p => !p)} style={{ position: 'absolute', right: '0.7rem', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.1rem', color: 'var(--muted)' }}>
+                {showPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
           </div>
           {error && <p className="modal-error">{error}</p>}
           <button type="submit" className="btn btn-primary modal-submit">
