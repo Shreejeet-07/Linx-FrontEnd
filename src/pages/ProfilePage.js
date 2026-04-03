@@ -25,6 +25,7 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
   const [saved, setSaved] = useState(false);
   const [errors, setErrors] = useState({});
   const [copiedPage, setCopiedPage] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
 
   const myPageUrl = `${window.location.origin}/?user=${user.id}`;
   const currentTheme = PROFILE_THEMES.find(t => t.id === profileTheme) || PROFILE_THEMES[0];
@@ -77,7 +78,39 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
 
           {/* LEFT — Live Preview */}
           <div className="pp-preview-col">
-            <div className="pp-preview-card" style={{ background: currentTheme.bg }}>
+            <div className={`pp-preview-card${showScanner ? ' pp-scanner-active' : ''}`}
+              style={{ background: currentTheme.bg }}
+              onClick={() => setShowScanner(s => !s)}
+            >
+              {/* Scanner overlay */}
+              {showScanner && (
+                <div className="pp-scanner-overlay">
+                  <div className="pp-scanner-flick" />
+                  <div className="pp-scanner-frame">
+                    <span className="pp-scanner-corner tl" />
+                    <span className="pp-scanner-corner tr" />
+                    <span className="pp-scanner-corner bl" />
+                    <span className="pp-scanner-corner br" />
+                    <div className="pp-scanner-line" />
+                    <div className="pp-scanner-qr">
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(myPageUrl)}&bgcolor=ffffff&color=000000&margin=4`}
+                        alt="QR Code"
+                        className="pp-scanner-qr-img"
+                      />
+                    </div>
+                    <div className="pp-scanner-url">{myPageUrl}</div>
+                    <button
+                      className="pp-scanner-open"
+                      onClick={e => { e.stopPropagation(); window.open(myPageUrl, '_blank'); }}
+                    >
+                      Open My Page ↗
+                    </button>
+                  </div>
+                  <div className="pp-scanner-hint">Scan to visit your page</div>
+                </div>
+              )}
+
               <div className="pp-preview-bg">
                 <div className="pp-bg-blob1" style={{ background: `radial-gradient(circle,${currentTheme.accent}99,transparent 70%)` }} />
                 <div className="pp-bg-blob2" />
@@ -96,13 +129,15 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
                 <div className="pp-preview-email">{email || user.email}</div>
                 <div className="pp-preview-share">
                   <div className="pp-preview-share-url">{myPageUrl}</div>
-                  <button className={`pp-copy-btn${copiedPage ? ' copied' : ''}`} onClick={copyPageLink}>
+                  <button className={`pp-copy-btn${copiedPage ? ' copied' : ''}`} onClick={e => { e.stopPropagation(); copyPageLink(); }}>
                     {copiedPage ? '✅' : '📋'}
                   </button>
                 </div>
               </div>
             </div>
-            <div className="pp-preview-label">Live Preview</div>
+            <div className="pp-preview-label">
+              {showScanner ? '✕ Click to close scanner' : '📱 Click here to see the scanner'}
+            </div>
           </div>
 
           {/* RIGHT — Edit Form */}
