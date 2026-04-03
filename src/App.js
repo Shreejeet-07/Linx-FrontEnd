@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import ProfilePage from './pages/ProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
 import AdminDashboard from './pages/AdminDashboard';
+import DemoPage from './pages/DemoPage';
 import SpaceCursor from './components/SpaceCursor';
 import './App.css';
 
@@ -82,18 +83,20 @@ export default function App() {
   let content;
 
   if (!user) {
-    if (page === 'explore') {
+    if (page === 'demo') {
+      content = <DemoPage onBack={() => setPage('landing')} onSignup={() => { setPage('landing'); }} />;
+    } else if (page === 'explore') {
       content = <Explore onViewProfile={openProfile} onBack={() => setPage('landing')} onAuth={handleAuth} />;
     } else if (page === 'leaderboard') {
       content = <Leaderboard onViewProfile={openProfile} onBack={() => setPage('landing')} onAuth={handleAuth} />;
     } else if (page === 'profile' && profileId) {
       content = <ProfileView userId={profileId} onBack={() => setPage('explore')} isGuest />;
     } else {
-      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} onLeaderboard={() => setPage('leaderboard')} user={null} />;
+      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} onLeaderboard={() => setPage('leaderboard')} onDemo={() => setPage('demo')} user={null} />;
     }
   } else if (user.role === 'admin') {
     if (page === 'landing') {
-      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} onLeaderboard={() => setPage('leaderboard')} user={user} />;
+      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} onLeaderboard={() => setPage('leaderboard')} onDemo={() => setPage('demo')} user={user} />;
     } else if (page === 'profile' && profileId) {
       content = <ProfileView userId={profileId} onBack={() => setPage('admin')} isGuest />;
     } else if (page === 'explore') {

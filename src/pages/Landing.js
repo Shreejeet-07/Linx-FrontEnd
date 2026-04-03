@@ -31,7 +31,7 @@ const FEATURES = [
   },
 ];
 
-export default function Landing({ onAuth, onBrowse, onLeaderboard, user }) {
+export default function Landing({ onAuth, onBrowse, onLeaderboard, onDemo, user }) {
   const isAdmin = user?.role === 'admin';
   const [menuOpen, setMenuOpen] = useState(false);
   const [modal, setModal] = useState(null);
@@ -103,6 +103,7 @@ export default function Landing({ onAuth, onBrowse, onLeaderboard, user }) {
           <p>Share all your links — portfolio, socials, shop — from one beautiful page. Built for creators, freelancers, and brands.</p>
           <div className="l-hero-btns">
             <button className="btn btn-primary" onClick={() => setModal('signup')}>Create your Linx →</button>
+            <button className="btn btn-secondary" onClick={onDemo}>📖 See how it works</button>
           </div>
         </div>
 
