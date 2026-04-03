@@ -153,3 +153,12 @@ export async function adminDeleteUser(userId) {
 export async function adminDeleteLink(userId, linkId) {
   try { await req('DELETE', `/api/admin/users/${userId}/links/${linkId}`); } catch {}
 }
+
+export async function broadcastAnnouncement(message) {
+  try {
+    await req('POST', '/api/admin/broadcast', { message });
+    return { success: true };
+  } catch (err) {
+    return { error: err.message };
+  }
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllUsers, adminDeleteUser, adminDeleteLink } from '../store';
+import { getAllUsers, adminDeleteUser, adminDeleteLink, broadcastAnnouncement } from '../store';
 import AppNav from '../components/AppNav';
 import './AdminDashboard.css';
 
@@ -9,6 +9,8 @@ export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLa
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState(null);
   const [tab, setTab] = useState('users');
+  const [broadcastMsg, setBroadcastMsg] = useState('');
+  const [broadcastStatus, setBroadcastStatus] = useState('');
 
   useEffect(() => {
     getAllUsers().then(data => { setUsers(data); setLoading(false); });
@@ -35,7 +37,22 @@ export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLa
 
   const NAV = [
     ['users', '👥', 'Users'],
+    ['broadcast', '📢', 'Broadcast'],
   ];
+
+  async function handleBroadcast(e) {
+    e.preventDefault();
+    if (!broadcastMsg.trim()) return;
+    setBroadcastStatus('sending');
+    const result = await broadcastAnnouncement(broadcastMsg);
+    if (result.success) {
+      setBroadcastStatus('sent');
+      setBroadcastMsg('');
+      setTimeout(() => setBroadcastStatus(''), 3000);
+    } else {
+      setBroadcastStatus('error');
+    }
+  }
 
   return (
     <div className="admin-layout">
@@ -139,6 +156,36 @@ export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLa
                     )}
                   </div>
                 ))}
+              </div>
+            </>
+          )}
+
+          {tab === 'broadcast' && (
+            <>
+              <div className="admin-header">
+                <h1>Broadcast Announcement</h1>
+                <p>Send a notification to all users at once</p>
+              </div>
+              <div className="card" style={{ maxWidth: 600, padding: '2rem' }}>
+                <form onSubmit={handleBroadcast}>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <label style={{ display: 'block', fontWeight: 600, marginBottom: '0.5rem', fontSize: '0.88rem' }}>Message</label>
+                    <textarea
+                      value={broadcastMsg}
+                      onChange={e => setBroadcastMsg(e.target.value)}
+                      placeholder="Write your announcement here..."
+                      rows={4}
+                      style={{ width: '100%', borderRadius: 12, padding: '0.75rem', fontSize: '0.9rem', resize: 'vertical' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <button type="submit" className="btn btn-primary" disabled={broadcastStatus === 'sending' || !broadcastMsg.trim()}>
+                      {broadcastStatus === 'sending' ? 'Sending…' : '📢 Send to All Users'}
+                    </button>
+                    {broadcastStatus === 'sent' && <span style={{ color: 'green', fontSize: '0.88rem' }}>✅ Sent to {users.length} users!</span>}
+                    {broadcastStatus === 'error' && <span style={{ color: 'red', fontSize: '0.88rem' }}>❌ Failed to send</span>}
+                  </div>
+                </form>
               </div>
             </>
           )}

@@ -62,12 +62,13 @@ export default function NotificationsPage({ user, onLogout, setUser, currentPage
                 <div className="notif-dot" />
                 <div className="notif-icon">{n.linkIcon || '🔗'}</div>
                 <div className="notif-body">
-                  <div className="notif-text">
-                    Someone clicked <span className="notif-link-name">"{n.linkTitle}"</span>
-                  </div>
+                  {n.type === 'announcement'
+                    ? <div className="notif-text"><strong>Announcement:</strong> {n.linkTitle}</div>
+                    : <div className="notif-text">Someone clicked <span className="notif-link-name">"{n.linkTitle}"</span></div>
+                  }
                   <div className="notif-time">{timeAgo(n.time)}</div>
                 </div>
-                <div className="notif-badge">👆 click</div>
+                <div className="notif-badge">{n.type === 'announcement' ? '📢 admin' : '👆 click'}</div>
               </div>
             ))}
           </div>
