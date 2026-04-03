@@ -124,9 +124,15 @@ export default function DemoPage({ onBack, onSignup }) {
 
       {/* CTA */}
       <div className="demo-cta">
-        <h2>Ready to get started?</h2>
-        <p>Create your free Linx page in under 60 seconds.</p>
-        <button className="btn btn-primary" onClick={onSignup}>Create your Linx →</button>
+        <div className="demo-cta-inner">
+          <p className="demo-cta-tag">✦ Free forever</p>
+          <h2>Ready to build your Linx?</h2>
+          <p className="demo-cta-sub">Join creators who share smarter.</p>
+          <div className="demo-cta-btns">
+            <button className="btn btn-primary" onClick={onSignup}>Start for free →</button>
+            <button className="btn demo-cta-browse" onClick={onBack}>Back to home</button>
+          </div>
+        </div>
       </div>
 
       <footer className="demo-footer">
