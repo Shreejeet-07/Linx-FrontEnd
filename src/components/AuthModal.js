@@ -73,23 +73,7 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
       setError('Google sign-in not ready, please wait a moment and try again.');
       return;
     }
-    // Re-initialize to ensure fresh callback, then prompt
-    window.google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleGoogleResponse,
-      ux_mode: 'popup',
-    });
-    window.google.accounts.id.prompt((notification) => {
-      if (notification.isSkippedMoment() || notification.isDismissedMoment()) {
-        // Fallback: open accounts.google.com picker via oauth2
-        const client = window.google.accounts.oauth2.initTokenClient({
-          client_id: GOOGLE_CLIENT_ID,
-          scope: 'openid email profile',
-          callback: () => {},
-        });
-        client.requestAccessToken({ prompt: 'select_account' });
-      }
-    });
+    window.google.accounts.id.prompt();
   }
 
   async function handleGoogleSetup(e) {
