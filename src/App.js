@@ -96,8 +96,14 @@ export default function App() {
       content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} onLeaderboard={() => setPage('leaderboard')} user={user} />;
     } else if (page === 'profile' && profileId) {
       content = <ProfileView userId={profileId} onBack={() => setPage('admin')} isGuest />;
+    } else if (page === 'explore') {
+      content = <Explore onViewProfile={openProfile} onBack={() => setPage('admin')} onAuth={handleAuth} currentPage="explore" {...navProps} />;
+    } else if (page === 'leaderboard') {
+      content = <Leaderboard onViewProfile={openProfile} onBack={() => setPage('admin')} onAuth={handleAuth} currentPage="leaderboard" {...navProps} />;
+    } else if (page === 'notifications') {
+      content = <NotificationsPage currentPage="notifications" {...navProps} />;
     } else {
-      content = <AdminDashboard user={user} onLogout={handleLogout} onViewProfile={openProfile} onGoToLanding={() => setPage('landing')} />;
+      content = <AdminDashboard user={user} onLogout={handleLogout} onViewProfile={openProfile} onGoToLanding={() => setPage('landing')} onNavigate={handleNavigate} />;
     }
   } else {
     if (page === 'profile' && profileId) {

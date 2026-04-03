@@ -3,7 +3,7 @@ import { getAllUsers, adminDeleteUser, adminDeleteLink, broadcastAnnouncement } 
 import AppNav from '../components/AppNav';
 import './AdminDashboard.css';
 
-export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLanding }) {
+export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLanding, onNavigate }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -39,7 +39,7 @@ export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLa
     if (dest === 'users') setTab('users');
     else if (dest === 'broadcast') setTab('broadcast');
     else if (dest === 'landing') onGoToLanding();
-    else if (dest === 'explore' || dest === 'leaderboard' || dest === 'notifications') onGoToLanding();
+    else onNavigate(dest);
   }
 
   async function handleBroadcast(e) {
