@@ -57,8 +57,6 @@ export default function Landing({ onAuth, onBrowse, user }) {
   const FOUNDERS = [
     { name: 'Shreejeet Patnaik',     initials: 'SP', gradient: 'linear-gradient(135deg,#7B5CF6,#a78bfa)', glow: 'rgba(123,92,246,0.6)' },
     { name: 'Surya Prakash Narayan', initials: 'SN', gradient: 'linear-gradient(135deg,#F97316,#fb923c)', glow: 'rgba(249,115,22,0.6)'  },
-    { name: 'Debi Prasad Das',        initials: 'DD', gradient: 'linear-gradient(135deg,#22C55E,#4ade80)', glow: 'rgba(34,197,94,0.6)'   },
-    { name: 'Jyotispada Mohanty',    initials: 'JM', gradient: 'linear-gradient(135deg,#EC4899,#f472b6)', glow: 'rgba(236,72,153,0.6)'  },
   ];
 
   function scrollTo(id) {
