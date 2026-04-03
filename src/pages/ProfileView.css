@@ -143,9 +143,17 @@
 .pv-bio {
   font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   line-height: 1.5;
   animation: nameFluidSlide 0.5s var(--ease-fluid) 0.4s both;
+}
+
+.pv-views {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 1rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+  animation: nameFluidSlide 0.5s var(--ease-fluid) 0.45s both;
 }
 
 /* ── Links ───────────────────────────────────────────────────── */

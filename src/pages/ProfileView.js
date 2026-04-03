@@ -90,6 +90,7 @@ export default function ProfileView({ userId, onBack, isGuest }) {
         </div>
         <div className="pv-name">@{profile.username}</div>
         {profile.bio && <div className="pv-bio">{profile.bio}</div>}
+        <div className="pv-views">👁 {(profile.profileViews || 0).toLocaleString()} profile views</div>
         {avgRating && (
           <div className="pv-avg-rating">
             {'★'.repeat(Math.round(avgRating))}{'☆'.repeat(5 - Math.round(avgRating))}
