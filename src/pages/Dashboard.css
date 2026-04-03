@@ -72,7 +72,17 @@
 }
 .pc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; }
 .pc-title { font-weight: 700; font-size: 0.88rem; }
-.pc-pct { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--accent); }
+.pc-pct {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 8px var(--accent-glow));
+}
 .pc-bar-track { width: 100%; height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 0.7rem; }
 .pc-bar-fill {
   height: 100%;
