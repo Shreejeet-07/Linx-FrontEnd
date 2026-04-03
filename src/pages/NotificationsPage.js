@@ -64,11 +64,13 @@ export default function NotificationsPage({ user, onLogout, setUser, currentPage
                 <div className="notif-body">
                   {n.type === 'announcement'
                     ? <div className="notif-text"><strong>Announcement:</strong> {n.linkTitle}</div>
+                    : n.type === 'review'
+                    ? <div className="notif-text">{n.linkTitle}</div>
                     : <div className="notif-text">Someone clicked <span className="notif-link-name">"{n.linkTitle}"</span></div>
                   }
                   <div className="notif-time">{timeAgo(n.time)}</div>
                 </div>
-                <div className="notif-badge">{n.type === 'announcement' ? '📢 admin' : '👆 click'}</div>
+                <div className="notif-badge">{n.type === 'announcement' ? '📢 admin' : n.type === 'review' ? '💬 review' : '👆 click'}</div>
               </div>
             ))}
           </div>
