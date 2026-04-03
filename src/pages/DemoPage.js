@@ -4,10 +4,12 @@ const STEPS = [
   {
     step: '01', icon: '🔐', title: 'Sign Up with Google',
     desc: 'Click "Create your Linx" on the home page. Hit "Sign up with Google", choose your Gmail account. Google verifies your email — no fake accounts allowed.',
+    action: 'signup', actionLabel: 'Sign up now →',
   },
   {
     step: '02', icon: '✏️', title: 'Set Your Username & Password',
     desc: 'After Google verifies you, pick a unique username like "yourname" — your public page will be at linxs.co.in/?user=yourID. Set a password for future logins.',
+    action: 'signup', actionLabel: 'Get started →',
   },
   {
     step: '03', icon: '🔗', title: 'Add Your Links',
@@ -62,12 +64,25 @@ export default function DemoPage({ onBack, onSignup }) {
         <h2 className="demo-section-title">Step by Step Guide</h2>
         <div className="demo-steps">
           {STEPS.map((s, i) => (
-            <div className="demo-step" key={i} style={{ animationDelay: `${i * 0.08}s` }}>
+            <div
+              className={`demo-step${s.action ? ' demo-step-clickable' : ''}`}
+              key={i}
+              style={{ animationDelay: `${i * 0.08}s` }}
+              onClick={s.action ? onSignup : undefined}
+            >
               <div className="demo-step-num">{s.step}</div>
               <div className="demo-step-icon">{s.icon}</div>
               <div className="demo-step-content">
-                <div className="demo-step-title">{s.title}</div>
+                <div className="demo-step-title">
+                  {s.title}
+                  {s.action && <span className="demo-step-badge">Click to start</span>}
+                </div>
                 <div className="demo-step-desc">{s.desc}</div>
+                {s.action && (
+                  <button className="demo-step-action" onClick={e => { e.stopPropagation(); onSignup(); }}>
+                    {s.actionLabel}
+                  </button>
+                )}
               </div>
             </div>
           ))}
