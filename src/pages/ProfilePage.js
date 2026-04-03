@@ -55,10 +55,11 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
       const updated = { ...user, bio, avatar, photo: photo || null, profileTheme };
       setUser(updated);
       setPhoto(updated.photo || null);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } else {
+      setErrors({ save: 'Failed to save. Make sure you are logged in and try again.' });
     }
-
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
   }
 
   function copyPageLink() {
@@ -198,6 +199,7 @@ export default function ProfilePage({ user, onLogout, setUser, currentPage, onNa
                   </div>
                 </div>
 
+                {errors.save && <div className="pp-error" style={{marginBottom:'1rem'}}>{errors.save}</div>}
                 <button type="submit" className={`btn btn-primary pp-save-btn${saved ? ' saved' : ''}`}>
                   {saved ? '✅ Saved!' : 'Save Changes'}
                 </button>

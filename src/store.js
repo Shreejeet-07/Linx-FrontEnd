@@ -105,7 +105,10 @@ export async function updateProfile(userId, { bio, avatar, photo, profileTheme }
   try {
     const data = await req('PATCH', '/api/me', { bio, avatar, photo, profileTheme });
     return { ...data, id: data._id || data.id };
-  } catch { return null; }
+  } catch (err) {
+    console.error('updateProfile failed:', err.message);
+    return null;
+  }
 }
 
 export async function getMe() {
