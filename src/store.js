@@ -154,6 +154,14 @@ export async function adminDeleteLink(userId, linkId) {
   try { await req('DELETE', `/api/admin/users/${userId}/links/${linkId}`); } catch {}
 }
 
+export async function getReviews(userId) {
+  try { return await req('GET', `/api/users/${userId}/reviews`); } catch { return []; }
+}
+
+export async function addReview(userId, { name, message, rating }) {
+  try { return await req('POST', `/api/users/${userId}/reviews`, { name, message, rating }); } catch { return null; }
+}
+
 export async function broadcastAnnouncement(message) {
   try {
     await req('POST', '/api/admin/broadcast', { message });
