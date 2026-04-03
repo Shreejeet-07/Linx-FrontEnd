@@ -3,7 +3,6 @@ import { login, googleAuth } from '../store';
 import './AuthModal.css';
 
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const REDIRECT_URI = 'postmessage';
 
 function GoogleIcon() {
   return (
