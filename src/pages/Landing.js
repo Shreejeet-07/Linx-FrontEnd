@@ -234,7 +234,6 @@ export default function Landing({ onAuth, onBrowse, user }) {
                 </div>
 
                 <div className="l-founder-name">{f.name}</div>
-                <div className="l-founder-role">Co-Founder</div>
                 <div className="l-founder-hint">Click to view</div>
               </div>
             ))}
