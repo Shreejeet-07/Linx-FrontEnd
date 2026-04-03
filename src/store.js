@@ -57,7 +57,11 @@ export async function getAllInfluencers() {
 export async function getPublicProfile(userId) {
   try {
     const data = await req('GET', `/api/users/${userId}`);
-    return { ...data, id: data._id || data.id };
+    return {
+      ...data,
+      id: data._id || data.id,
+      links: (data.links || []).map(l => ({ ...l, id: l._id || l.id }))
+    };
   } catch { return null; }
 }
 
