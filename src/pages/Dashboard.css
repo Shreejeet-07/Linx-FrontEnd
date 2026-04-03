@@ -20,14 +20,55 @@
   .dash-main { padding: 1.5rem 1rem; }
 }
 
-/* ── STATS ── */
-.dash-stats {
+/* ── TWO COLUMN LAYOUT ── */
+.dash-two-col {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  grid-template-columns: 320px 1fr;
+  gap: 1.5rem;
+  align-items: start;
   margin-bottom: 1.5rem;
 }
 
+.dash-stats-col {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dash-stats-heading {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.5px;
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+
+.dash-links-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dash-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 900px) {
+  .dash-two-col { grid-template-columns: 1fr; }
+  .dash-stats-col { position: static; }
+  .dash-stats { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 600px) {
+  .dash-stats { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── STATS ── */
 .dash-stat-card {
   background: var(--card);
   border: 1px solid var(--border);
