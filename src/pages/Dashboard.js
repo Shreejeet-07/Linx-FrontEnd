@@ -3,6 +3,46 @@ import { getLinks, addLink, updateLink, deleteLink, trackClick } from '../store'
 import AppNav from '../components/AppNav';
 import './Dashboard.css';
 
+function ProfileCompletion({ user, links, onNavigate }) {
+  const steps = [
+    { label: 'Add a profile photo',       done: !!user.photo,                          action: 'profile' },
+    { label: 'Write a bio',               done: !!(user.bio && user.bio.trim()),        action: 'profile' },
+    { label: 'Add at least one link',     done: links.length > 0,                      action: null      },
+    { label: 'Customize your theme',      done: user.profileTheme && user.profileTheme !== 'default', action: 'profile' },
+    { label: 'Add 3 or more links',       done: links.length >= 3,                     action: null      },
+  ];
+  const done = steps.filter(s => s.done).length;
+  const pct = Math.round((done / steps.length) * 100);
+  const next = steps.find(s => !s.done);
+  if (pct === 100) return null;
+
+  return (
+    <div className="profile-completion">
+      <div className="pc-header">
+        <div className="pc-title">Profile Completion</div>
+        <div className="pc-pct">{pct}%</div>
+      </div>
+      <div className="pc-bar-track">
+        <div className="pc-bar-fill" style={{ width: `${pct}%` }} />
+      </div>
+      {next && (
+        <div className="pc-next">
+          Next: <strong>{next.label}</strong>
+          {next.action && <button className="pc-action" onClick={() => onNavigate(next.action)}>Fix it →</button>}
+        </div>
+      )}
+      <div className="pc-steps">
+        {steps.map((s, i) => (
+          <div key={i} className={`pc-step${s.done ? ' done' : ''}`}>
+            <span className="pc-step-dot">{s.done ? '✓' : '○'}</span>
+            <span>{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard({ user, onLogout, setUser, currentPage, onNavigate }) {
   const [links, setLinks] = useState([]);
   const [form, setForm] = useState({ title: '', url: '', icon: '🔗' });
@@ -95,6 +135,8 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
           <div className="dash-stat-card"><div className="dash-stat-label">Total Clicks</div><div className="dash-stat-val">{totalClicks}</div></div>
           <div className="dash-stat-card"><div className="dash-stat-label">Active Links</div><div className="dash-stat-val">{links.filter(l => l.active).length}</div></div>
         </div>
+
+        <ProfileCompletion user={user} links={links} onNavigate={onNavigate} />
 
         <div className="card dash-form-card">
           <h3>{editId ? 'Edit Link' : 'Add New Link'}</h3>
