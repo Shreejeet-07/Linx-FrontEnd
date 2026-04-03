@@ -41,6 +41,8 @@ export default function AdminDashboard({ user, onLogout, onViewProfile, onGoToLa
     else if (dest === 'landing') onGoToLanding();
     else if (dest === 'explore' || dest === 'leaderboard' || dest === 'notifications') onGoToLanding();
   }
+
+  async function handleBroadcast(e) {
     e.preventDefault();
     if (!broadcastMsg.trim()) return;
     setBroadcastStatus('sending');
