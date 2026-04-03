@@ -119,16 +119,17 @@ export default function Landing({ onAuth, onBrowse, user }) {
                 { bg: '#EDE9FE', icon: '🚀', label: 'Get Started' },
                 { bg: '#FEF3C7', icon: '👥', label: 'Browse as Guest' },
                 { bg: '#F0FDF4', icon: '👨‍💻', label: 'Meet the Founders' },
-                { bg: '#DCFCE7', icon: '🛒', label: 'Shop My Merch' },
+                { bg: '#DCFCE7', icon: '🏆', label: 'Leaderboard' },
               ].map(({ bg, icon, label }) => (
                 <div className="l-plink" key={label}
                   onClick={
                     label === 'Get Started' ? () => setModal('signup') :
                     label === 'Browse as Guest' ? onBrowse :
                     label === 'Meet the Founders' ? () => document.querySelector('.l-founders')?.scrollIntoView({ behavior: 'smooth' }) :
+                    label === 'Leaderboard' ? onBrowse :
                     undefined
                   }
-                  style={{ cursor: label === 'Shop My Merch' ? 'default' : 'pointer' }}>
+                  style={{ cursor: label === 'Leaderboard' ? 'pointer' : label === 'Shop My Merch' ? 'default' : 'pointer' }}>
                   <span className="l-plink-icon" style={{ background: bg }}>{icon}</span>
                   {label}
                 </div>
