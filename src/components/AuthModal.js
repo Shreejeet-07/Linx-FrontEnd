@@ -40,10 +40,12 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
     function initAndRender() {
       if (!window.google || !btnRef.current) return;
       window.google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleResponse });
+      window.google.accounts.id.disableAutoSelect();
       window.google.accounts.id.renderButton(btnRef.current, {
         theme: 'outline', size: 'large',
         width: btnRef.current.offsetWidth || 352,
         text: mode === 'signup' ? 'signup_with' : 'signin_with',
+        logo_alignment: 'left',
       });
       setGsiReady(true);
     }
@@ -67,6 +69,7 @@ export default function AuthModal({ mode, onClose, onToggle, onAuth }) {
       theme: 'outline', size: 'large',
       width: btnRef.current.offsetWidth || 352,
       text: mode === 'signup' ? 'signup_with' : 'signin_with',
+      logo_alignment: 'left',
     });
     setGsiReady(true);
   }, [googleStep, mode]);
