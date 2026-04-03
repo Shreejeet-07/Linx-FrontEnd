@@ -1,7 +1,54 @@
 import { useState, useEffect } from 'react';
-import { getLinks, addLink, updateLink, deleteLink, trackClick } from '../store';
+import { getLinks, addLink, updateLink, deleteLink, trackClick, getNotifications } from '../store';
 import AppNav from '../components/AppNav';
 import './Dashboard.css';
+
+function ClickChart({ notifications }) {
+  // Build last 7 days labels and click counts from notifications
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return {
+      label: d.toLocaleDateString('en', { weekday: 'short' }),
+      date: d.toDateString(),
+      count: 0,
+    };
+  });
+
+  notifications.filter(n => n.type === 'click').forEach(n => {
+    const d = new Date(n.time).toDateString();
+    const day = days.find(x => x.date === d);
+    if (day) day.count++;
+  });
+
+  const max = Math.max(...days.map(d => d.count), 1);
+  const total = days.reduce((s, d) => s + d.count, 0);
+
+  if (total === 0) return null;
+
+  return (
+    <div className="click-chart">
+      <div className="click-chart-header">
+        <div className="click-chart-title">📈 Clicks — Last 7 Days</div>
+        <div className="click-chart-total">{total} total</div>
+      </div>
+      <div className="click-chart-bars">
+        {days.map((d, i) => (
+          <div className="click-chart-col" key={i}>
+            <div className="click-chart-count">{d.count > 0 ? d.count : ''}</div>
+            <div className="click-chart-bar-wrap">
+              <div
+                className="click-chart-bar"
+                style={{ height: `${(d.count / max) * 100}%`, animationDelay: `${i * 0.07}s` }}
+              />
+            </div>
+            <div className="click-chart-label">{d.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function ProfileCompletion({ user, links, onNavigate }) {
   const steps = [
@@ -45,6 +92,7 @@ function ProfileCompletion({ user, links, onNavigate }) {
 
 export default function Dashboard({ user, onLogout, setUser, currentPage, onNavigate }) {
   const [links, setLinks] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [form, setForm] = useState({ title: '', url: '', icon: '🔗' });
   const [editId, setEditId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
@@ -54,6 +102,7 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
 
   useEffect(() => {
     getLinks(user.id).then(setLinks);
+    getNotifications().then(setNotifications);
   }, [user.id]);
 
   useEffect(() => {
@@ -138,6 +187,7 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
         </div>
 
         <ProfileCompletion user={user} links={links} onNavigate={onNavigate} />
+        <ClickChart notifications={notifications} />
 
         <div className="card dash-form-card">
           <h3>{editId ? 'Edit Link' : 'Add New Link'}</h3>

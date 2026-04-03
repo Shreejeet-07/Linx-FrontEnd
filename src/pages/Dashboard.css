@@ -61,6 +61,72 @@
 }
 .dash-stat-card:hover .dash-stat-val { transform: scale(1.05); }
 
+/* ── CLICK CHART ── */
+.click-chart {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.5s var(--ease-fluid) both;
+}
+.click-chart-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.click-chart-title { font-weight: 700; font-size: 0.88rem; }
+.click-chart-total {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 0.9rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.click-chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  height: 100px;
+}
+.click-chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  height: 100%;
+}
+.click-chart-count {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-height: 14px;
+}
+.click-chart-bar-wrap {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.click-chart-bar {
+  width: 100%;
+  min-height: 3px;
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  border-radius: 4px 4px 0 0;
+  animation: barGrow 0.6s var(--ease-fluid) both;
+  transition: height 0.4s var(--ease-fluid);
+}
+@keyframes barGrow {
+  from { transform: scaleY(0); transform-origin: bottom; }
+  to   { transform: scaleY(1); transform-origin: bottom; }
+}
+.click-chart-bar:hover { filter: brightness(1.2); }
+.click-chart-label {
+  font-size: 0.68rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
 /* ── PROFILE COMPLETION BAR ── */
 .profile-completion {
   background: var(--card);
