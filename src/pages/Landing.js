@@ -31,7 +31,7 @@ const FEATURES = [
   },
 ];
 
-export default function Landing({ onAuth, onBrowse, user }) {
+export default function Landing({ onAuth, onBrowse, onLeaderboard, user }) {
   const isAdmin = user?.role === 'admin';
   const [menuOpen, setMenuOpen] = useState(false);
   const [modal, setModal] = useState(null);
@@ -126,7 +126,7 @@ export default function Landing({ onAuth, onBrowse, user }) {
                     label === 'Get Started' ? () => setModal('signup') :
                     label === 'Browse as Guest' ? onBrowse :
                     label === 'Meet the Founders' ? () => document.querySelector('.l-founders')?.scrollIntoView({ behavior: 'smooth' }) :
-                    label === 'Leaderboard' ? onBrowse :
+                    label === 'Leaderboard' ? (onLeaderboard || onBrowse) :
                     undefined
                   }
                   style={{ cursor: label === 'Leaderboard' ? 'pointer' : label === 'Shop My Merch' ? 'default' : 'pointer' }}>

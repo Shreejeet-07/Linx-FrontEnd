@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Landing from './pages/Landing';
 import Explore from './pages/Explore';
+import Leaderboard from './pages/Leaderboard';
 import ProfileView from './pages/ProfileView';
 import Dashboard from './pages/Dashboard';
 import ProfilePage from './pages/ProfilePage';
@@ -60,6 +61,7 @@ export default function App() {
   function handleNavigate(dest) {
     if (dest === 'dashboard') setPage('dashboard');
     else if (dest === 'explore') setPage('explore');
+    else if (dest === 'leaderboard') setPage('leaderboard');
     else if (dest === 'profile') setPage('profile-edit');
     else if (dest === 'notifications') setPage('notifications');
     else if (dest === 'admin') setPage('admin');
@@ -73,10 +75,12 @@ export default function App() {
   if (!user) {
     if (page === 'explore') {
       content = <Explore onViewProfile={openProfile} onBack={() => setPage('landing')} onAuth={handleAuth} />;
+    } else if (page === 'leaderboard') {
+      content = <Leaderboard onViewProfile={openProfile} onBack={() => setPage('landing')} onAuth={handleAuth} />;
     } else if (page === 'profile' && profileId) {
       content = <ProfileView userId={profileId} onBack={() => setPage('explore')} isGuest />;
     } else {
-      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} user={null} />;
+      content = <Landing onAuth={handleAuth} onBrowse={() => setPage('explore')} onLeaderboard={() => setPage('leaderboard')} user={null} />;
     }
   } else if (user.role === 'admin') {
     if (page === 'landing') {
@@ -91,6 +95,8 @@ export default function App() {
       content = <ProfileView userId={profileId} onBack={() => setPage('explore')} isGuest />;
     } else if (page === 'explore') {
       content = <Explore onViewProfile={openProfile} onBack={() => setPage('dashboard')} onAuth={handleAuth} currentPage="explore" {...navProps} />;
+    } else if (page === 'leaderboard') {
+      content = <Leaderboard onViewProfile={openProfile} onBack={() => setPage('dashboard')} onAuth={handleAuth} currentPage="leaderboard" {...navProps} />;
     } else if (page === 'profile-edit') {
       content = <ProfilePage currentPage="profile" {...navProps} />;
     } else if (page === 'notifications') {

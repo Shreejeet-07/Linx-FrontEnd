@@ -19,6 +19,7 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
   const pages = [
     { id: 'dashboard',      icon: '🔗', label: 'My Links'      },
     { id: 'explore',        icon: '🌍', label: 'Explore'        },
+    { id: 'leaderboard',    icon: '🏆', label: 'Leaderboard'    },
     { id: 'notifications',  icon: '🔔', label: 'Notifications', badge: unread },
     { id: 'profile',        icon: '👤', label: 'Profile'        },
   ];
