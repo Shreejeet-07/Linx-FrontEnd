@@ -91,6 +91,13 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
           </button>
         </div>
 
+        <div className="dash-stats">
+          <div className="dash-stat-card"><div className="dash-stat-label">Total Links</div><div className="dash-stat-val">{links.length}</div></div>
+          <div className="dash-stat-card"><div className="dash-stat-label">Total Clicks</div><div className="dash-stat-val">{totalClicks}</div></div>
+          <div className="dash-stat-card"><div className="dash-stat-label">Active Links</div><div className="dash-stat-val">{links.filter(l => l.active).length}</div></div>
+          <div className="dash-stat-card"><div className="dash-stat-label">👁 Profile Views</div><div className="dash-stat-val">{(user.profileViews || 0).toLocaleString()}</div></div>
+        </div>
+
         <div className="card dash-form-card">
           <h3>{editId ? 'Edit Link' : 'Add New Link'}</h3>
           <form className="dash-form" onSubmit={saveLink}>

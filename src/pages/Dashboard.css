@@ -69,6 +69,13 @@
 }
 
 /* ── STATS ── */
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
 .dash-stat-card {
   background: var(--card);
   border: 1px solid var(--border);
