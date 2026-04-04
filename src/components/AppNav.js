@@ -73,8 +73,8 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
           </button>
         ))}
 
-        {/* Your Stats — between Profile and AI */}
-        {!isAdmin && stats && (
+        {/* Your Stats & AI — always show for regular users */}
+        {!isAdmin && (
           <>
             <button
               className={`appnav-item${currentPage === 'stats' ? ' active' : ''}`}
