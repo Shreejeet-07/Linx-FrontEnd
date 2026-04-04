@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { getNotifications, getLinks } from '../store';
+import { getNotifications } from '../store';
 import ThemeSwitcher from './ThemeSwitcher';
 import './AppNav.css';
 
 export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
   const [unread, setUnread] = useState(0);
-  const [stats, setStats] = useState(null);
 
   useEffect(() => {
     async function refresh() {
@@ -16,14 +15,6 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
     const t = setInterval(refresh, 10000);
     return () => clearInterval(t);
   }, [user.id]);
-
-  useEffect(() => {
-    if (user.role === 'admin') return;
-    getLinks().then(links => {
-      const totalClicks = links.reduce((s, l) => s + (l.clicks || 0), 0);
-      setStats({ links: links.length, clicks: totalClicks, views: user.profileViews || 0 });
-    });
-  }, [user.id, user.role, user.profileViews]);
 
   const isAdmin = user.role === 'admin';
 
