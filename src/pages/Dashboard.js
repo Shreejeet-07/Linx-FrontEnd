@@ -179,62 +179,44 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
           </button>
         </div>
 
-        <div className="dash-two-col">
+        <ProfileCompletion user={user} links={links} onNavigate={onNavigate} />
+        <ClickChart notifications={notifications} />
 
-          {/* LEFT — Your Stats */}
-          <div className="dash-stats-col">
-            <div className="dash-stats-heading">📊 Your Stats</div>
-
-            <div className="dash-stats">
-              <div className="dash-stat-card"><div className="dash-stat-label">Total Links</div><div className="dash-stat-val">{links.length}</div></div>
-              <div className="dash-stat-card"><div className="dash-stat-label">Total Clicks</div><div className="dash-stat-val">{totalClicks}</div></div>
-              <div className="dash-stat-card"><div className="dash-stat-label">Active Links</div><div className="dash-stat-val">{links.filter(l => l.active).length}</div></div>
-              <div className="dash-stat-card"><div className="dash-stat-label">👁 Profile Views</div><div className="dash-stat-val">{(user.profileViews || 0).toLocaleString()}</div></div>
+        <div className="card dash-form-card">
+          <h3>{editId ? 'Edit Link' : 'Add New Link'}</h3>
+          <form className="dash-form" onSubmit={saveLink}>
+            <div className="dash-form-row">
+              <input className="dash-icon-input" value={form.icon} onChange={e => setForm({ ...form, icon: e.target.value })} maxLength={2} placeholder="🔗" />
+              <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Link title (e.g. My Portfolio)" required />
             </div>
-
-            <ClickChart notifications={notifications} />
-            <ProfileCompletion user={user} links={links} onNavigate={onNavigate} />
-          </div>
-
-          {/* RIGHT — Links Management */}
-          <div className="dash-links-col">
-            <div className="card dash-form-card">
-              <h3>{editId ? 'Edit Link' : 'Add New Link'}</h3>
-              <form className="dash-form" onSubmit={saveLink}>
-                <div className="dash-form-row">
-                  <input className="dash-icon-input" value={form.icon} onChange={e => setForm({ ...form, icon: e.target.value })} maxLength={2} placeholder="🔗" />
-                  <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Link title (e.g. My Portfolio)" required />
-                </div>
-                <input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })} placeholder="URL (e.g. https://yoursite.com)" required />
-                <div className="dash-form-actions">
-                  <button type="submit" className="btn btn-primary">{editId ? 'Save Changes' : 'Add Link'}</button>
-                  {editId && <button type="button" className="btn btn-secondary" onClick={() => { setEditId(null); setForm({ title: '', url: '', icon: '🔗' }); }}>Cancel</button>}
-                </div>
-              </form>
+            <input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })} placeholder="URL (e.g. https://yoursite.com)" required />
+            <div className="dash-form-actions">
+              <button type="submit" className="btn btn-primary">{editId ? 'Save Changes' : 'Add Link'}</button>
+              {editId && <button type="button" className="btn btn-secondary" onClick={() => { setEditId(null); setForm({ title: '', url: '', icon: '🔗' }); }}>Cancel</button>}
             </div>
+          </form>
+        </div>
 
-            <div className="dash-links-list">
-              {links.length === 0 && <div className="dash-empty">No links yet. Add your first one above ↑</div>}
-              {links.map((link, i) => (
-                <div className={`dash-link-row${link.active ? '' : ' inactive'}`} key={link.id} style={{ animationDelay: `${i * 0.05}s` }}>
-                  <div className="dash-link-icon">{link.icon}</div>
-                  <div className="dash-link-info">
-                    <div className="dash-link-title">{link.title}</div>
-                    <div className="dash-link-url">{link.url}</div>
-                  </div>
-                  <div className="dash-link-clicks">{link.clicks} clicks</div>
-                  <div className="dash-link-actions">
-                    <button className={`dash-toggle${link.active ? ' on' : ''}`} onClick={() => toggleLink(link.id, link.active)} title={link.active ? 'Disable' : 'Enable'} />
-                    <button className={`btn btn-ghost copy-link-btn${copiedId === link.id ? ' copy-link-copied' : ''}`} onClick={() => copyLink(link.url.startsWith('http') ? link.url : `https://${link.url}`, link.id)} title="Copy URL">
-                      {copiedId === link.id ? '✅' : '📋'}
-                    </button>
-                    <button className="btn btn-ghost" onClick={() => startEdit(link)}>✏️</button>
-                    <button className="btn btn-danger" style={{ borderRadius: 10, padding: '0.4rem 0.7rem', fontSize: '0.8rem' }} onClick={() => removeLink(link.id)}>🗑</button>
-                  </div>
-                </div>
-              ))}
+        <div className="dash-links-list">
+          {links.length === 0 && <div className="dash-empty">No links yet. Add your first one above ↑</div>}
+          {links.map((link, i) => (
+            <div className={`dash-link-row${link.active ? '' : ' inactive'}`} key={link.id} style={{ animationDelay: `${i * 0.05}s` }}>
+              <div className="dash-link-icon">{link.icon}</div>
+              <div className="dash-link-info">
+                <div className="dash-link-title">{link.title}</div>
+                <div className="dash-link-url">{link.url}</div>
+              </div>
+              <div className="dash-link-clicks">{link.clicks} clicks</div>
+              <div className="dash-link-actions">
+                <button className={`dash-toggle${link.active ? ' on' : ''}`} onClick={() => toggleLink(link.id, link.active)} title={link.active ? 'Disable' : 'Enable'} />
+                <button className={`btn btn-ghost copy-link-btn${copiedId === link.id ? ' copy-link-copied' : ''}`} onClick={() => copyLink(link.url.startsWith('http') ? link.url : `https://${link.url}`, link.id)} title="Copy URL">
+                  {copiedId === link.id ? '✅' : '📋'}
+                </button>
+                <button className="btn btn-ghost" onClick={() => startEdit(link)}>✏️</button>
+                <button className="btn btn-danger" style={{ borderRadius: 10, padding: '0.4rem 0.7rem', fontSize: '0.8rem' }} onClick={() => removeLink(link.id)}>🗑</button>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
 
         <div className="dash-preview-wrap">

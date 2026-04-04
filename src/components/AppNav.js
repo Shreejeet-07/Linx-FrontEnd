@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { getNotifications } from '../store';
+import { getNotifications, getLinks } from '../store';
 import ThemeSwitcher from './ThemeSwitcher';
 import './AppNav.css';
 
 export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
   const [unread, setUnread] = useState(0);
+  const [stats, setStats] = useState(null);
 
   useEffect(() => {
     async function refresh() {
@@ -15,6 +16,14 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
     const t = setInterval(refresh, 10000);
     return () => clearInterval(t);
   }, [user.id]);
+
+  useEffect(() => {
+    if (user.role === 'admin') return;
+    getLinks().then(links => {
+      const totalClicks = links.reduce((s, l) => s + (l.clicks || 0), 0);
+      setStats({ links: links.length, clicks: totalClicks, views: user.profileViews || 0 });
+    });
+  }, [user.id, user.role, user.profileViews]);
 
   const isAdmin = user.role === 'admin';
 
@@ -63,6 +72,27 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
             {p.badge && typeof p.badge === 'string' && <span className="appnav-badge appnav-badge-lock">{p.badge}</span>}
           </button>
         ))}
+
+        {/* Your Stats — only for regular users */}
+        {!isAdmin && stats && (
+          <div className="appnav-stats">
+            <div className="appnav-stats-title">📊 Your Stats</div>
+            <div className="appnav-stats-row">
+              <div className="appnav-stat">
+                <div className="appnav-stat-val">{stats.links}</div>
+                <div className="appnav-stat-label">Links</div>
+              </div>
+              <div className="appnav-stat">
+                <div className="appnav-stat-val">{stats.clicks}</div>
+                <div className="appnav-stat-label">Clicks</div>
+              </div>
+              <div className="appnav-stat">
+                <div className="appnav-stat-val">{stats.views}</div>
+                <div className="appnav-stat-label">Views</div>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
 
       <div className="appnav-bottom">

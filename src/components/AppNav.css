@@ -192,6 +192,49 @@
   to   { transform: scale(1); }
 }
 
+/* ── Your Stats ── */
+.appnav-stats {
+  margin-top: 0.8rem;
+  padding: 0.9rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm);
+  animation: fadeInUp 0.4s var(--ease-fluid) both;
+}
+.appnav-stats-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 0.7rem;
+}
+.appnav-stats-row {
+  display: flex;
+  gap: 0;
+  justify-content: space-between;
+}
+.appnav-stat {
+  flex: 1;
+  text-align: center;
+}
+.appnav-stat-val {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+.appnav-stat-label {
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.3);
+  font-weight: 500;
+  margin-top: 0.15rem;
+}
+
 /* ── Bottom section ── */
 .appnav-bottom {
   display: flex;
