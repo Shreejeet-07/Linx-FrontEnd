@@ -172,6 +172,7 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
             <div>
               <div className="my-page-banner-label">Your Linx Page</div>
               <div className="my-page-banner-url">{myPageUrl}</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--muted)', marginTop: '0.2rem' }}>{totalClicks} total clicks</div>
             </div>
           </div>
           <button className={`btn my-page-copy-btn${copiedPage ? ' copied' : ''}`} onClick={copyPageLink}>
