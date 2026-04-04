@@ -1,98 +1,10 @@
 import { useState, useEffect } from 'react';
-import { getLinks, addLink, updateLink, deleteLink, trackClick, getNotifications } from '../store';
+import { getLinks, addLink, updateLink, deleteLink, trackClick } from '../store';
 import AppNav from '../components/AppNav';
 import './Dashboard.css';
 
-function ClickChart({ notifications }) {
-  // Build last 7 days labels and click counts from notifications
-  const days = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (6 - i));
-    return {
-      label: d.toLocaleDateString('en', { weekday: 'short' }),
-      date: d.toDateString(),
-      count: 0,
-    };
-  });
-
-  notifications.filter(n => n.type === 'click').forEach(n => {
-    const d = new Date(n.time).toDateString();
-    const day = days.find(x => x.date === d);
-    if (day) day.count++;
-  });
-
-  const max = Math.max(...days.map(d => d.count), 1);
-  const total = days.reduce((s, d) => s + d.count, 0);
-
-  if (total === 0) return null;
-
-  return (
-    <div className="click-chart">
-      <div className="click-chart-header">
-        <div className="click-chart-title">📈 Clicks — Last 7 Days</div>
-        <div className="click-chart-total">{total} total</div>
-      </div>
-      <div className="click-chart-bars">
-        {days.map((d, i) => (
-          <div className="click-chart-col" key={i}>
-            <div className="click-chart-count">{d.count > 0 ? d.count : ''}</div>
-            <div className="click-chart-bar-wrap">
-              <div
-                className="click-chart-bar"
-                style={{ height: `${(d.count / max) * 100}%`, animationDelay: `${i * 0.07}s` }}
-              />
-            </div>
-            <div className="click-chart-label">{d.label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ProfileCompletion({ user, links, onNavigate }) {
-  const steps = [
-    { label: 'Add a profile photo',       done: !!user.photo,                          action: 'profile' },
-    { label: 'Write a bio',               done: !!(user.bio && user.bio.trim()),        action: 'profile' },
-    { label: 'Add at least one link',     done: links.length > 0,                      action: null      },
-    { label: 'Customize your theme',      done: user.profileTheme && user.profileTheme !== 'default', action: 'profile' },
-    { label: 'Add 3 or more links',       done: links.length >= 3,                     action: null      },
-  ];
-  const done = steps.filter(s => s.done).length;
-  const pct = Math.round((done / steps.length) * 100);
-  const next = steps.find(s => !s.done);
-  if (pct === 100) return null;
-
-  return (
-    <div className="profile-completion">
-      <div className="pc-header">
-        <div className="pc-title">Profile Completion</div>
-        <div className="pc-pct">{pct}%</div>
-      </div>
-      <div className="pc-bar-track">
-        <div className="pc-bar-fill" style={{ width: `${pct}%` }} />
-      </div>
-      {next && (
-        <div className="pc-next">
-          Next: <strong>{next.label}</strong>
-          {next.action && <button className="pc-action" onClick={() => onNavigate(next.action)}>Fix it →</button>}
-        </div>
-      )}
-      <div className="pc-steps">
-        {steps.map((s, i) => (
-          <div key={i} className={`pc-step${s.done ? ' done' : ''}`}>
-            <span className="pc-step-dot">{s.done ? '✓' : '○'}</span>
-            <span>{s.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function Dashboard({ user, onLogout, setUser, currentPage, onNavigate }) {
   const [links, setLinks] = useState([]);
-  const [notifications, setNotifications] = useState([]);
   const [form, setForm] = useState({ title: '', url: '', icon: '🔗' });
   const [editId, setEditId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
@@ -102,7 +14,6 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
 
   useEffect(() => {
     getLinks(user.id).then(setLinks);
-    getNotifications().then(setNotifications);
   }, [user.id]);
 
   useEffect(() => {
