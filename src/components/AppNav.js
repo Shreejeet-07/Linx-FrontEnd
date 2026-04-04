@@ -6,13 +6,10 @@ import './AppNav.css';
 export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
   const [unread, setUnread] = useState(0);
   const [stats, setStats] = useState(null);
-  const [notifications, setNotifications] = useState([]);
-  const [statsOpen, setStatsOpen] = useState(false);
 
   useEffect(() => {
     async function refresh() {
       const n = await getNotifications();
-      setNotifications(Array.isArray(n) ? n : []);
       setUnread(Array.isArray(n) ? n.filter(x => !x.read).length : 0);
     }
     refresh();
@@ -27,20 +24,6 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
       setStats({ links: links.length, clicks: totalClicks, views: user.profileViews || 0 });
     });
   }, [user.id, user.role, user.profileViews]);
-
-  // Build 7-day chart data from notifications
-  const chartDays = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (6 - i));
-    return { label: d.toLocaleDateString('en', { weekday: 'short' }), date: d.toDateString(), count: 0 };
-  });
-  notifications.filter(n => n.type === 'click').forEach(n => {
-    const d = new Date(n.time).toDateString();
-    const day = chartDays.find(x => x.date === d);
-    if (day) day.count++;
-  });
-  const chartMax = Math.max(...chartDays.map(d => d.count), 1);
-  const chartTotal = chartDays.reduce((s, d) => s + d.count, 0);
 
   const isAdmin = user.role === 'admin';
 
@@ -93,50 +76,13 @@ export default function AppNav({ user, currentPage, onNavigate, onLogout }) {
         {/* Your Stats — between Profile and AI */}
         {!isAdmin && stats && (
           <>
-            <button className="appnav-item appnav-stats-toggle" onClick={() => setStatsOpen(o => !o)}>
+            <button
+              className={`appnav-item${currentPage === 'stats' ? ' active' : ''}`}
+              onClick={() => onNavigate('stats')}
+            >
               <span className="appnav-icon">📊</span>
               <span className="appnav-label">Your Stats</span>
-              <span className="appnav-stats-arrow">{statsOpen ? '▲' : '▼'}</span>
             </button>
-
-            {statsOpen && (
-              <div className="appnav-stats">
-                <div className="appnav-stats-row">
-                  <div className="appnav-stat">
-                    <div className="appnav-stat-val">{stats.links}</div>
-                    <div className="appnav-stat-label">Links</div>
-                  </div>
-                  <div className="appnav-stat">
-                    <div className="appnav-stat-val">{stats.clicks}</div>
-                    <div className="appnav-stat-label">Clicks</div>
-                  </div>
-                  <div className="appnav-stat">
-                    <div className="appnav-stat-val">{stats.views}</div>
-                    <div className="appnav-stat-label">Views</div>
-                  </div>
-                </div>
-
-                {chartTotal > 0 && (
-                  <div className="appnav-chart">
-                    <div className="appnav-chart-header">
-                      <span>📈 Last 7 Days</span>
-                      <span>{chartTotal} total</span>
-                    </div>
-                    <div className="appnav-chart-bars">
-                      {chartDays.map((d, i) => (
-                        <div className="appnav-chart-col" key={i}>
-                          <div className="appnav-chart-count">{d.count > 0 ? d.count : ''}</div>
-                          <div className="appnav-chart-bar-wrap">
-                            <div className="appnav-chart-bar" style={{ height: `${(d.count / chartMax) * 100}%`, animationDelay: `${i * 0.07}s` }} />
-                          </div>
-                          <div className="appnav-chart-label">{d.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
 
             <button
               className={`appnav-item${currentPage === aiItem.id ? ' active' : ''}`}

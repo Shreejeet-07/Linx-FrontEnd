@@ -220,6 +220,15 @@
 .pc-step.done { color: var(--green); }
 .pc-step-dot { font-size: 0.75rem; font-weight: 700; width: 16px; text-align: center; }
 
+/* ── STATS PAGE ── */
+.stats-header { margin-bottom: 2rem; animation: fadeInUp 0.5s var(--ease-fluid) both; }
+.stats-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.8rem; font-weight: 800; letter-spacing: -1px;
+  margin-bottom: 0.3rem;
+}
+.stats-sub { color: var(--muted); font-size: 0.9rem; }
+
 /* ── FORM ── */
 .dash-form-card {
   margin-bottom: 1.5rem;
