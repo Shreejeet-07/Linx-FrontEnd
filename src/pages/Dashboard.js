@@ -180,9 +180,6 @@ export default function Dashboard({ user, onLogout, setUser, currentPage, onNavi
           </button>
         </div>
 
-        <ProfileCompletion user={user} links={links} onNavigate={onNavigate} />
-        <ClickChart notifications={notifications} />
-
         <div className="card dash-form-card">
           <h3>{editId ? 'Edit Link' : 'Add New Link'}</h3>
           <form className="dash-form" onSubmit={saveLink}>
